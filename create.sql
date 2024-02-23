@@ -1,8 +1,8 @@
-drop schema cccat14 cascade;
+drop schema if exists ride cascade;
 
-create schema cccat14;
+create schema ride;
 
-create table cccat14.account (
+create table ride.account (
 	account_id uuid primary key,
 	name text not null,
 	email text not null,

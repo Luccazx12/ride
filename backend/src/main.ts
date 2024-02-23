@@ -67,7 +67,7 @@ export async function signup (input: any): Promise<any> {
 	try {
 		const id = crypto.randomUUID();
 
-		const [acc] = await connection.query("select * from cccat14.account where email = $1", [input.email]);
+		const [acc] = await connection.query("select * from ride.account where email = $1", [input.email]);
 		if (!acc) {
 
 			if (input.name.match(/[a-zA-Z] [a-zA-Z]+/)) {
@@ -76,7 +76,7 @@ export async function signup (input: any): Promise<any> {
 					if (validateCpf(input.cpf)) {
 						if (input.isDriver) {
 							if (input.carPlate.match(/[A-Z]{3}[0-9]{4}/)) {
-								await connection.query("insert into cccat14.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, input.name, input.email, input.cpf, input.carPlate, !!input.isPassenger, !!input.isDriver]);
+								await connection.query("insert into ride.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, input.name, input.email, input.cpf, input.carPlate, !!input.isPassenger, !!input.isDriver]);
 								
 								const obj = {
 									accountId: id
@@ -87,7 +87,7 @@ export async function signup (input: any): Promise<any> {
 								return -5;
 							}
 						} else {
-							await connection.query("insert into cccat14.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, input.name, input.email, input.cpf, input.carPlate, !!input.isPassenger, !!input.isDriver]);
+							await connection.query("insert into ride.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)", [id, input.name, input.email, input.cpf, input.carPlate, !!input.isPassenger, !!input.isDriver]);
 
 							const obj = {
 								accountId: id
