@@ -10,7 +10,7 @@ export function validateCpf(str: string) {
           .replace(".", "")
           .replace(".", "")
           .replace("-", "")
-          .replace(" ", "");
+		  .replace(" ", "");
 
         if (!str.split("").every((c) => c === str[0])) {
           try {
