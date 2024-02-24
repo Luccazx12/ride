@@ -11,6 +11,11 @@ export class SignUpInputBuilder {
     password: faker.internet.password(),
   };
 
+  public withCpf(cpf: string): this {
+    this.props.cpf = cpf;
+    return this;
+  }
+
   public withName(name: string): this {
     this.props.name = name;
     return this;
