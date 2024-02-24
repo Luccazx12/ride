@@ -16,10 +16,33 @@ const createFixture = (): Fixture => {
 describe("Main", () => {
   it("should create account for passenger", async () => {
     // given
-    const { signupInput } = createFixture();
+    const signupInput = new SignUpInputBuilder()
+      .withIsDriver(false)
+      .withIsPassenger(true)
+      .build();
 
     // when
     const signupOutput = await signup(signupInput);
+
+    // then
+    const account = await getAccountById(signupOutput.accountId);
+    expect(signupOutput.accountId).toBeDefined();
+    expect(account.name).toBe(signupInput.name);
+    expect(account.email).toBe(signupInput.email);
+    expect(account.cpf).toBe(signupInput.cpf);
+    expect(account.is_passenger).toBe(signupInput.isPassenger);
+  });
+
+  it.only("should create account for driver", async () => {
+    // given
+    const signupInput = new SignUpInputBuilder()
+      .withIsDriver(true)
+      .withIsPassenger(false)
+      .build();
+
+    // when
+    const signupOutput = await signup(signupInput);
+    console.log(signupOutput);
 
     // then
     const account = await getAccountById(signupOutput.accountId);
@@ -43,8 +66,8 @@ describe("Main", () => {
 
     // then
     const account = await getAccountById(signupOutput.accountId);
-    expect(account).not.toBeDefined();
     expect(signupOutput).toBe(-4);
+    expect(account).not.toBeDefined();
   });
 
   it("should return -3 when name is invalid", async () => {
@@ -73,8 +96,8 @@ describe("Main", () => {
 
     // then
     const account = await getAccountById(signupOutput.accountId);
-    expect(account).not.toBeDefined();
     expect(signupOutput).toBe(-2);
+    expect(account).not.toBeDefined();
   });
 
   it("should return -1 when cpf is invalid", async () => {
@@ -87,7 +110,24 @@ describe("Main", () => {
 
     // then
     const account = await getAccountById(signupOutput.accountId);
-    expect(account).not.toBeDefined();
     expect(signupOutput).toBe(-1);
+    expect(account).not.toBeDefined();
+  });
+
+  it("should return -5 when carPlate is invalid and account is driver", async () => {
+    // given
+    const invalidCarPlate = faker.lorem.words();
+    const signupInput = new SignUpInputBuilder()
+      .withCarPlate(invalidCarPlate)
+      .withIsDriver(true)
+      .build();
+
+    // when
+    const signupOutput = await signup(signupInput);
+
+    // then
+    const account = await getAccountById(signupOutput.accountId);
+    expect(signupOutput).toBe(-5);
+    expect(account).not.toBeDefined();
   });
 });

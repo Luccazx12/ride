@@ -4,4 +4,6 @@ export interface SignupInput {
   cpf: string;
   isPassenger: boolean;
   password: string;
+  carPlate: string;
+  isDriver: boolean;
 }
