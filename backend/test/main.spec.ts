@@ -33,7 +33,7 @@ describe("Main", () => {
     expect(account.is_passenger).toBe(signupInput.isPassenger);
   });
 
-  it.only("should create account for driver", async () => {
+  it("should create account for driver", async () => {
     // given
     const signupInput = new SignUpInputBuilder()
       .withIsDriver(true)
@@ -42,7 +42,6 @@ describe("Main", () => {
 
     // when
     const signupOutput = await signup(signupInput);
-    console.log(signupOutput);
 
     // then
     const account = await getAccountById(signupOutput.accountId);
@@ -100,9 +99,12 @@ describe("Main", () => {
     expect(account).not.toBeDefined();
   });
 
-  it("should return -1 when cpf is invalid", async () => {
+  it.each([
+    faker.number.bigInt().toString(),
+    null as unknown as string,
+    "222222222222",
+  ])("should return -1 when cpf is invalid", async (invalidCpf) => {
     // given
-    const invalidCpf = faker.number.bigInt().toString();
     const signupInput = new SignUpInputBuilder().withCpf(invalidCpf).build();
 
     // when
