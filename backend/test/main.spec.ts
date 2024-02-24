@@ -8,7 +8,7 @@ interface Fixture {
 
 const createFixture = (): Fixture => {
   return {
-    signupInput: new SignUpInputBuilder().build(),
+      signupInput: new SignUpInputBuilder().build(),
   };
 };
 
@@ -27,5 +27,19 @@ describe("Main", () => {
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
     expect(account.is_passenger).toBe(signupInput.isPassenger);
+  });
+
+  it("should return -4 when email is already related to an account", async () => {
+    // given
+    const { signupInput } = createFixture();
+    await signup(signupInput);
+
+    // when
+    const signupOutput = await signup(signupInput);
+
+    // then
+    const account = await getAccountById(signupOutput.accountId);
+    expect(account).not.toBeDefined();
+    expect(signupOutput).toBe(-4);
   });
 });
