@@ -50,9 +50,7 @@ describe("Main", () => {
   it("should return -3 when name is invalid", async () => {
     // given
     const invalidName = faker.number.int().toString();
-    const signupInput = new SignUpInputBuilder()
-      .withName(invalidName)
-      .build();
+    const signupInput = new SignUpInputBuilder().withName(invalidName).build();
 
     // when
     const signupOutput = await signup(signupInput);
@@ -61,5 +59,21 @@ describe("Main", () => {
     const account = await getAccountById(signupOutput.accountId);
     expect(account).not.toBeDefined();
     expect(signupOutput).toBe(-3);
+  });
+
+  it("should return -2 when email is invalid", async () => {
+    // given
+    const invalidEmail = faker.lorem.words();
+    const signupInput = new SignUpInputBuilder()
+      .withEmail(invalidEmail)
+      .build();
+
+    // when
+    const signupOutput = await signup(signupInput);
+
+    // then
+    const account = await getAccountById(signupOutput.accountId);
+    expect(account).not.toBeDefined();
+    expect(signupOutput).toBe(-2);
   });
 });
