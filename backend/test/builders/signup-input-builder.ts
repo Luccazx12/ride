@@ -11,6 +11,11 @@ export class SignUpInputBuilder {
     password: faker.internet.password(),
   };
 
+  public withName(name: string): this {
+    this.props.name = name;
+    return this;
+  }
+
   public withEmail(email: string): this {
     this.props.email = email;
     return this;
