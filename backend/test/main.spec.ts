@@ -76,4 +76,18 @@ describe("Main", () => {
     expect(account).not.toBeDefined();
     expect(signupOutput).toBe(-2);
   });
+
+  it("should return -1 when cpf is invalid", async () => {
+    // given
+    const invalidCpf = faker.number.bigInt().toString();
+    const signupInput = new SignUpInputBuilder().withCpf(invalidCpf).build();
+
+    // when
+    const signupOutput = await signup(signupInput);
+
+    // then
+    const account = await getAccountById(signupOutput.accountId);
+    expect(account).not.toBeDefined();
+    expect(signupOutput).toBe(-1);
+  });
 });
