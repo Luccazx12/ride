@@ -1,4 +1,4 @@
-import { signup } from "../src/main";
+import { getAccountById, signup } from "../src/main";
 import { SignupInput } from "../src/dtos/signup-input";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
 
@@ -20,11 +20,12 @@ describe("Main", () => {
     // when
     const signupOutput = await signup(signupInput);
 
-    // then
+      // then
+    const account = await getAccountById(signupOutput.accountId);
     expect(signupOutput.accountId).toBeDefined();
-    expect(signupOutput.name).toBe(signupInput.name);
-    expect(signupOutput.email).toBe(signupInput.email);
-    expect(signupOutput.cpf).toBe(signupInput.cpf);
-    expect(signupOutput.isPassenger).toBe(signupInput.isPassenger);
+    expect(account.name).toBe(signupInput.name);
+    expect(account.email).toBe(signupInput.email);
+    expect(account.cpf).toBe(signupInput.cpf);
+    expect(account.is_passenger).toBe(signupInput.isPassenger);
   });
 });
