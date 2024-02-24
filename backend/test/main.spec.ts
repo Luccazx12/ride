@@ -100,9 +100,13 @@ describe("Main", () => {
   });
 
   it.each([
+    "",
     faker.number.bigInt().toString(),
     null as unknown as string,
-    "222222222222",
+    undefined as unknown as string,
+    "1111",
+    "111111111",
+    "11111111111",
   ])("should return -1 when cpf is invalid", async (invalidCpf) => {
     // given
     const signupInput = new SignUpInputBuilder().withCpf(invalidCpf).build();
