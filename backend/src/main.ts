@@ -2,37 +2,6 @@ import crypto from "crypto";
 import pgp from "pg-promise";
 import { SignupOutput } from "./dtos/signup-output";
 
-export function isValidCpf(cpf: string): boolean {
-  if (!cpf) return false;
-  cpf = cpf.replace(/\D/, "");
-  if (cpf.length !== 11) return false;
-  if (cpf.split("").every((c) => c === cpf[0])) return false;
-
-  let d1, d2;
-  let dg1, dg2, rest;
-  let digito;
-  let nDigResult;
-  d1 = d2 = 0;
-  dg1 = dg2 = rest = 0;
-
-  for (let nCount = 1; nCount < cpf.length - 1; nCount++) {
-    digito = parseInt(cpf.substring(nCount - 1, nCount));
-    d1 = d1 + (11 - nCount) * digito;
-
-    d2 = d2 + (12 - nCount) * digito;
-  }
-
-  rest = d1 % 11;
-
-  dg1 = rest < 2 ? (dg1 = 0) : 11 - rest;
-  d2 += 2 * dg1;
-  rest = d2 % 11;
-  rest < 2 ? (dg2 = 0) : (dg2 = 11 - rest);
-  let nDigVerific = cpf.substring(cpf.length - 2, cpf.length);
-  nDigResult = "" + dg1 + "" + dg2;
-  return nDigVerific == nDigResult;
-}
-
 export async function signup(input: any): Promise<SignupOutput | Error> {
   const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
   const id = crypto.randomUUID();
@@ -67,15 +36,50 @@ export async function signup(input: any): Promise<SignupOutput | Error> {
 }
 
 function isValidName(name: string): boolean {
-  return RegExp(/[a-zA-Z] [a-zA-Z]+/).exec(name) !== null;
+  return RegExp(/[a-zA-Z] [a-zA-Z]+/).test(name);
 }
 
 function isValidEmail(email: string): boolean {
-  return RegExp(/^(.+)@(.+)$/).exec(email) !== null;
+  return RegExp(/^(.+)@(.+)$/).test(email);
+}
+
+export function isValidCpf(cpf: string): boolean {
+  if (!cpf) return false;
+  cpf = cleanCpf(cpf);
+  if (!isCpfLengthValid(cpf)) return false;
+  if (hasAllEqualsDigits(cpf)) return false;
+  const firstDigit = calculateDigit(cpf, 10);
+  const secondDigit = calculateDigit(cpf, 11);
+  return extractVerificationDigit(cpf) === `${firstDigit}${secondDigit}`;
+}
+
+function cleanCpf(cpf: string): string {
+  return cpf.replace(/\D/g, "");
+}
+
+function isCpfLengthValid(cpf: string): boolean {
+  return cpf.length === 11;
+}
+
+function hasAllEqualsDigits(value: string): boolean {
+  return value.split("").every((v) => v === value[0]);
+}
+
+function calculateDigit(cpf: string, factor: number): string {
+  let total = 0;
+  for (const digit of cpf) {
+    if (factor > 1) total += parseInt(digit) * factor--;
+  }
+  const rest = total % 11;
+  return String(rest < 2 ? 0 : 11 - rest);
+}
+
+function extractVerificationDigit(cpf: string): string {
+  return cpf.slice(9);
 }
 
 function isValidCarPlate(carPlate: string): boolean {
-  return RegExp(/[A-Z]{3}[0-9]{4}/).exec(carPlate) !== null;
+  return RegExp(/[A-Z]{3}\d{4}/).test(carPlate);
 }
 
 export async function getAccountById(id: string): Promise<any> {
