@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import pgp from "pg-promise";
+import { SignupOutput } from "./dtos/signup-output";
 
 export function validateCpf(cpf: string) {
   if (!cpf) return false;
@@ -32,7 +33,7 @@ export function validateCpf(cpf: string) {
   return nDigVerific == nDigResult;
 }
 
-export async function signup(input: any): Promise<any> {
+export async function signup(input: any): Promise<SignupOutput | Error> {
   const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
   const id = crypto.randomUUID();
 
@@ -40,11 +41,12 @@ export async function signup(input: any): Promise<any> {
     "select * from ride.account where email = $1",
     [input.email]
   );
-  if (acc) return -4
-  if (!input.name.match(/[a-zA-Z] [a-zA-Z]+/)) return -3
-  if (!input.email.match(/^(.+)@(.+)$/)) return -2
-  if (!validateCpf(input.cpf)) return -1
-  if (input.isDriver && !input.carPlate.match(/[A-Z]{3}[0-9]{4}/)) return -5
+  if (acc) return new Error("Account with this email already exists");
+  if (!input.name.match(/[a-zA-Z] [a-zA-Z]+/)) return new Error("Invalid name");
+  if (!input.email.match(/^(.+)@(.+)$/)) return new Error("Invalid email");
+  if (!validateCpf(input.cpf)) return new Error("Invalid CPF");
+  if (input.isDriver && !input.carPlate.match(/[A-Z]{3}[0-9]{4}/))
+    return new Error("Invalid car plate");
   await connection.query(
     "insert into ride.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)",
     [
