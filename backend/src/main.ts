@@ -2,7 +2,7 @@ import crypto from "crypto";
 import pgp from "pg-promise";
 import { SignupOutput } from "./dtos/signup-output";
 
-export function validateCpf(cpf: string) {
+export function isValidCpf(cpf: string): boolean {
   if (!cpf) return false;
   cpf = cpf.replace(/\D/, "");
   if (cpf.length !== 11) return false;
@@ -42,10 +42,10 @@ export async function signup(input: any): Promise<SignupOutput | Error> {
     [input.email]
   );
   if (acc) return new Error("Account with this email already exists");
-  if (!input.name.match(/[a-zA-Z] [a-zA-Z]+/)) return new Error("Invalid name");
-  if (!input.email.match(/^(.+)@(.+)$/)) return new Error("Invalid email");
-  if (!validateCpf(input.cpf)) return new Error("Invalid CPF");
-  if (input.isDriver && !input.carPlate.match(/[A-Z]{3}[0-9]{4}/))
+  if (!isValidName(input.name)) return new Error("Invalid name");
+  if (!isValidEmail(input.email)) return new Error("Invalid email");
+  if (!isValidCpf(input.cpf)) return new Error("Invalid CPF");
+  if (input.isDriver && !isValidCarPlate(input.carPlate))
     return new Error("Invalid car plate");
   await connection.query(
     "insert into ride.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)",
@@ -64,6 +64,18 @@ export async function signup(input: any): Promise<SignupOutput | Error> {
   return {
     accountId: id,
   };
+}
+
+function isValidName(name: string): boolean {
+  return RegExp(/[a-zA-Z] [a-zA-Z]+/).exec(name) !== null;
+}
+
+function isValidEmail(email: string): boolean {
+  return RegExp(/^(.+)@(.+)$/).exec(email) !== null;
+}
+
+function isValidCarPlate(carPlate: string): boolean {
+  return RegExp(/[A-Z]{3}[0-9]{4}/).exec(carPlate) !== null;
 }
 
 export async function getAccountById(id: string): Promise<any> {
