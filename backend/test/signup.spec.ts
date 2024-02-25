@@ -1,8 +1,9 @@
-import { getAccountById, signup } from "../src/main";
 import { SignupInput } from "../src/dtos/signup-input";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
+import { getAccountById } from "../src/get-account";
+import { signup } from "../src/signup";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -14,7 +15,7 @@ const createFixture = (): Fixture => {
   };
 };
 
-describe("Main", () => {
+describe("Signup", () => {
   it("should create account for passenger", async () => {
     // given
     const signupInput = new SignUpInputBuilder()
