@@ -1,21 +1,7 @@
-import pgp from "pg-promise";
+import { SqlAccountDAO } from "./DAO/account-dao";
 
-export async function getAccountById(id: string): Promise<any> {
-  const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-  const [acc] = await connection.query(
-    "select * from ride.account where account_id = $1",
-    [id]
-  );
-  await connection.$pool.end();
-  return acc;
-}
+const accountDAO = new SqlAccountDAO();
 
-export async function getAccountByEmail(email: string): Promise<any> {
-  const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-  const [acc] = await connection.query(
-    "select * from ride.account where email = $1",
-    [email]
-  );
-  await connection.$pool.end();
-  return acc;
+export async function getAccount(id: string): Promise<any> {
+  return accountDAO.getById(id);
 }
