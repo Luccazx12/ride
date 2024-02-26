@@ -15,9 +15,10 @@ describe("Signup (e2e)", () => {
       "http://localhost:3000/v1/signup",
       input
     );
-    const signupOutput = signupResponse.data;
-
+    
     // then
+    expect(signupResponse.status).toEqual(200);
+    const signupOutput = signupResponse.data;
     expect(signupOutput.accountId).toBeDefined();
     const accountResponse = await axios.get(
       `http://localhost:3000/v1/accounts/${signupOutput.accountId}`
