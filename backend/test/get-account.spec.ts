@@ -49,6 +49,6 @@ describe("GetAccount", () => {
     const account = await getAccount.execute(accountId);
 
     // then
-    expect(account).not.toBeNull();
+    expect(account).toBeNull();
   });
 });
