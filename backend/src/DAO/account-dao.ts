@@ -1,16 +1,6 @@
 import pgp from "pg-promise";
 import { Account } from "../dtos/account";
 
-export interface Account {
-  accountId: string;
-  name: string;
-  email: string;
-  cpf: string;
-  carPlate: string;
-  isPassenger: boolean;
-  isDriver: boolean;
-}
-
 export interface AccountDAO {
   getByEmail(email: string): Promise<Account | null>;
   getById(id: string): Promise<Account | null>;
