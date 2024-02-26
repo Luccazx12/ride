@@ -5,6 +5,7 @@ import { Signup } from "../src/signup";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
 import { AccountDAO } from "../src/DAO/account-dao";
 import { InMemoryAccountDAO } from "./doubles/in-memory-account-dao";
+import { Account } from "../src/dtos/account";
 
 interface Subject {
   getAccount: GetAccount;
@@ -28,9 +29,12 @@ describe("GetAccount", () => {
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // when
-    const account = await getAccount.execute(signupOutput.accountId);
+    const account = (await getAccount.execute(
+      signupOutput.accountId
+    )) as Account;
 
     // then
+    expect(account).not.toBeNull();
     expect(account.accountId).toEqual(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
