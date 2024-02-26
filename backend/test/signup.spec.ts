@@ -3,15 +3,27 @@ import { SignUpInputBuilder } from "./builders/signup-input-builder";
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
 import { getAccount } from "../src/get-account";
-import { signup } from "../src/signup";
+import { Signup } from "../src/signup";
+import { SqlAccountDAO } from "../src/DAO/account-dao";
 
 interface Fixture {
   signupInput: SignupInput;
 }
 
+interface Subject {
+  signup: Signup;
+}
+
 const createFixture = (): Fixture => {
   return {
     signupInput: new SignUpInputBuilder().build(),
+  };
+};
+
+const createSubject = (): Subject => {
+  const accountDAO = new SqlAccountDAO();
+  return {
+    signup: new Signup(accountDAO),
   };
 };
 
@@ -22,9 +34,10 @@ describe("Signup", () => {
       .withIsDriver(false)
       .withIsPassenger(true)
       .build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = (await signup(signupInput)) as SignupOutput;
+    const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
@@ -41,9 +54,10 @@ describe("Signup", () => {
       .withIsDriver(true)
       .withIsPassenger(false)
       .build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = (await signup(signupInput)) as SignupOutput;
+    const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
@@ -57,13 +71,15 @@ describe("Signup", () => {
   it("should return Error when email is already related to an account", async () => {
     // given
     const { signupInput } = createFixture();
-    await signup(signupInput);
+    const { signup } = createSubject();
+
+    await signup.execute(signupInput);
     const inputWithSameEmail = new SignUpInputBuilder()
       .withEmail(signupInput.email)
       .build();
 
     // when
-    const signupOutput = await signup(inputWithSameEmail);
+    const signupOutput = await signup.execute(inputWithSameEmail);
 
     // then
     expect(signupOutput).toEqual(
@@ -75,9 +91,10 @@ describe("Signup", () => {
     // given
     const invalidName = faker.number.int().toString();
     const signupInput = new SignUpInputBuilder().withName(invalidName).build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = await signup(signupInput);
+    const signupOutput = await signup.execute(signupInput);
 
     // then
     expect(signupOutput).toEqual(new Error("Invalid name"));
@@ -89,9 +106,10 @@ describe("Signup", () => {
     const signupInput = new SignUpInputBuilder()
       .withEmail(invalidEmail)
       .build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = await signup(signupInput);
+    const signupOutput = await signup.execute(signupInput);
 
     // then
     expect(signupOutput).toEqual(new Error("Invalid email"));
@@ -108,9 +126,10 @@ describe("Signup", () => {
   ])("should return Error when cpf is invalid", async (invalidCpf) => {
     // given
     const signupInput = new SignUpInputBuilder().withCpf(invalidCpf).build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = await signup(signupInput);
+    const signupOutput = await signup.execute(signupInput);
 
     // then
     expect(signupOutput).toEqual(new Error("Invalid CPF"));
@@ -123,9 +142,10 @@ describe("Signup", () => {
       .withCarPlate(invalidCarPlate)
       .withIsDriver(true)
       .build();
+    const { signup } = createSubject();
 
     // when
-    const signupOutput = await signup(signupInput);
+    const signupOutput = await signup.execute(signupInput);
 
     // then
     expect(signupOutput).toEqual(new Error("Invalid car plate"));
