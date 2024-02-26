@@ -56,7 +56,7 @@ describe("RequestRide", () => {
 
     // then
     expect(requestRideOutput).toEqual(
-      new Error("Already exists an ride in progress")
+      new Error("Already exists an ride in progress for this passenger")
     );
   });
 
