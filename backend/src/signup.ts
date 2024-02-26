@@ -1,35 +1,37 @@
 import crypto from "crypto";
 import { SignupOutput } from "./dtos/signup-output";
 import { isValidCpf } from "./cpf-validation";
-import { SqlAccountDAO } from "./DAO/account-dao";
+import { AccountDAO } from "./DAO/account-dao";
 
-const accountDAO = new SqlAccountDAO();
+export class Signup {
+  public constructor(private readonly accountDAO: AccountDAO) {}
 
-export async function signup(input: any): Promise<SignupOutput | Error> {
-  const id = crypto.randomUUID();
-  const existingAccount = await accountDAO.getByEmail(input.email);
-  if (existingAccount)
-    return new Error("Account with this email already exists");
-  if (!isValidName(input.name)) return new Error("Invalid name");
-  if (!isValidEmail(input.email)) return new Error("Invalid email");
-  if (!isValidCpf(input.cpf)) return new Error("Invalid CPF");
-  if (input.isDriver && !isValidCarPlate(input.carPlate))
-    return new Error("Invalid car plate");
-  await accountDAO.save({ ...input, id });
+  public async execute(input: any): Promise<SignupOutput | Error> {
+    const id = crypto.randomUUID();
+    const existingAccount = await this.accountDAO.getByEmail(input.email);
+    if (existingAccount)
+      return new Error("Account with this email already exists");
+    if (!this.isValidName(input.name)) return new Error("Invalid name");
+    if (!this.isValidEmail(input.email)) return new Error("Invalid email");
+    if (!isValidCpf(input.cpf)) return new Error("Invalid CPF");
+    if (input.isDriver && !this.isValidCarPlate(input.carPlate))
+      return new Error("Invalid car plate");
+    await this.accountDAO.save({ ...input, id });
 
-  return {
-    accountId: id,
-  };
-}
+    return {
+      accountId: id,
+    };
+  }
 
-function isValidName(name: string): boolean {
-  return RegExp(/[a-zA-Z] [a-zA-Z]+/).test(name);
-}
+  private isValidName(name: string): boolean {
+    return RegExp(/[a-zA-Z] [a-zA-Z]+/).test(name);
+  }
 
-function isValidEmail(email: string): boolean {
-  return RegExp(/^(.+)@(.+)$/).test(email);
-}
+  private isValidEmail(email: string): boolean {
+    return RegExp(/^(.+)@(.+)$/).test(email);
+  }
 
-function isValidCarPlate(carPlate: string): boolean {
-  return RegExp(/[A-Z]{3}\d{4}/).test(carPlate);
+  private isValidCarPlate(carPlate: string): boolean {
+    return RegExp(/[A-Z]{3}\d{4}/).test(carPlate);
+  }
 }

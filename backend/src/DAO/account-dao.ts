@@ -1,6 +1,6 @@
 import pgp from "pg-promise";
 
-interface AccountDAO {
+export interface AccountDAO {
   getByEmail(email: string): Promise<any>;
   getById(id: string): Promise<any>;
   save(account: any): Promise<void>;

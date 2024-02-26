@@ -1,14 +1,16 @@
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
 import { getAccount } from "../src/get-account";
-import { signup } from "../src/signup";
+import { Signup } from "../src/signup";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
+import { SqlAccountDAO } from "../src/DAO/account-dao";
 
 describe("GetAccount", () => {
   it("should return account when account is found by id", async () => {
     // given
     const signupInput = new SignUpInputBuilder().build();
-    const signupOutput = (await signup(signupInput)) as SignupOutput;
+    const signup = new Signup(new SqlAccountDAO());
+    const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // when
     const account = await getAccount(signupOutput.accountId);
