@@ -2,11 +2,12 @@ import crypto from "crypto";
 import { SignupOutput } from "./dtos/signup-output";
 import { isValidCpf } from "./cpf-validation";
 import { AccountDAO } from "./DAO/account-dao";
+import { SignupInput } from "./dtos/signup-input";
 
 export class Signup {
   public constructor(private readonly accountDAO: AccountDAO) {}
 
-  public async execute(input: any): Promise<SignupOutput | Error> {
+  public async execute(input: SignupInput): Promise<SignupOutput | Error> {
     const accountId = crypto.randomUUID();
     const existingAccount = await this.accountDAO.getByEmail(input.email);
     if (existingAccount)

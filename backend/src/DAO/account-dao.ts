@@ -1,4 +1,5 @@
 import pgp from "pg-promise";
+import { Account } from "../dtos/account";
 
 export interface Account {
   accountId: string;
