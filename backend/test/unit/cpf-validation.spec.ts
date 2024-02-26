@@ -1,4 +1,4 @@
-import { isValidCpf } from "../src/cpf-validation";
+import { isValidCpf } from "../../src/cpf-validation";
 
 describe("CpfValidation", () => {
   describe("isValidCpf", () => {

@@ -1,12 +1,12 @@
-import { SignupInput } from "../src/dtos/signup-input";
-import { SignUpInputBuilder } from "./builders/signup-input-builder";
+import { SignupInput } from "../../src/dtos/signup-input";
+import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { faker } from "@faker-js/faker";
-import { SignupOutput } from "../src/dtos/signup-output";
-import { GetAccount } from "../src/get-account";
-import { Signup } from "../src/signup";
-import { AccountDAO } from "../src/DAO/account-dao";
-import { InMemoryAccountDAO } from "./doubles/in-memory-account-dao";
-import { Account } from "../src/dtos/account";
+import { SignupOutput } from "../../src/dtos/signup-output";
+import { GetAccount } from "../../src/get-account";
+import { Signup } from "../../src/signup";
+import { AccountDAO } from "../../src/DAO/account-dao";
+import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { Account } from "../../src/dtos/account";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -46,7 +46,9 @@ describe("Signup", () => {
     // then
     expect(signupOutput).toHaveProperty("accountId");
     const getAccount = new GetAccount(accountDAO);
-    const account = await getAccount.execute(signupOutput.accountId) as Account;
+    const account = (await getAccount.execute(
+      signupOutput.accountId
+    )) as Account;
     expect(account).not.toBeNull();
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
