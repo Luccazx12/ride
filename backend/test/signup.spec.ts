@@ -2,9 +2,9 @@ import { SignupInput } from "../src/dtos/signup-input";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
-import { getAccount } from "../src/get-account";
+import { GetAccount } from "../src/get-account";
 import { Signup } from "../src/signup";
-import { SqlAccountDAO } from "../src/DAO/account-dao";
+import { AccountDAO, SqlAccountDAO } from "../src/DAO/account-dao";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -12,6 +12,7 @@ interface Fixture {
 
 interface Subject {
   signup: Signup;
+  accountDAO: AccountDAO;
 }
 
 const createFixture = (): Fixture => {
@@ -23,6 +24,7 @@ const createFixture = (): Fixture => {
 const createSubject = (): Subject => {
   const accountDAO = new SqlAccountDAO();
   return {
+    accountDAO,
     signup: new Signup(accountDAO),
   };
 };
@@ -34,14 +36,15 @@ describe("Signup", () => {
       .withIsDriver(false)
       .withIsPassenger(true)
       .build();
-    const { signup } = createSubject();
+    const { signup, accountDAO } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const account = await getAccount(signupOutput.accountId);
+    const getAccount = new GetAccount(accountDAO);
+    const account = await getAccount.execute(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
@@ -54,14 +57,15 @@ describe("Signup", () => {
       .withIsDriver(true)
       .withIsPassenger(false)
       .build();
-    const { signup } = createSubject();
+    const { signup, accountDAO } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const account = await getAccount(signupOutput.accountId);
+    const getAccount = new GetAccount(accountDAO);
+    const account = await getAccount.execute(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
