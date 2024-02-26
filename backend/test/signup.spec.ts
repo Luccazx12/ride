@@ -2,7 +2,7 @@ import { SignupInput } from "../src/dtos/signup-input";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
-import { getAccountById } from "../src/get-account";
+import { getAccount } from "../src/get-account";
 import { signup } from "../src/signup";
 
 interface Fixture {
@@ -28,7 +28,7 @@ describe("Signup", () => {
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const account = await getAccountById(signupOutput.accountId);
+    const account = await getAccount(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
@@ -47,7 +47,7 @@ describe("Signup", () => {
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const account = await getAccountById(signupOutput.accountId);
+    const account = await getAccount(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
