@@ -1,7 +1,9 @@
-import { SqlAccountDAO } from "./DAO/account-dao";
+import { AccountDAO } from "./DAO/account-dao";
 
-const accountDAO = new SqlAccountDAO();
+export class GetAccount {
+  public constructor(private readonly accountDAO: AccountDAO) {}
 
-export async function getAccount(id: string): Promise<any> {
-  return accountDAO.getById(id);
+  public async execute(id: string): Promise<any> {
+    return this.accountDAO.getById(id);
+  }
 }
