@@ -1,17 +1,16 @@
 import pgp from "pg-promise";
 import { SignupOutput } from "./dtos/signup-output";
-import { isValidCpf } from "./cpf-validation";
 import crypto from "crypto";
+import { isValidCpf } from "./cpf-validation";
+import { getAccountByEmail } from "./get-account";
 
 export async function signup(input: any): Promise<SignupOutput | Error> {
   const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
   const id = crypto.randomUUID();
 
-  const [acc] = await connection.query(
-    "select * from ride.account where email = $1",
-    [input.email]
-  );
-  if (acc) return new Error("Account with this email already exists");
+  const [existingAccount] = await getAccountByEmail(input.email);
+  if (existingAccount)
+    return new Error("Account with this email already exists");
   if (!isValidName(input.name)) return new Error("Invalid name");
   if (!isValidEmail(input.email)) return new Error("Invalid email");
   if (!isValidCpf(input.cpf)) return new Error("Invalid CPF");
