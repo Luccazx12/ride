@@ -1,4 +1,6 @@
 import { faker } from "@faker-js/faker";
+import { SqlRideDAO } from "../../src/DAO/ride-dao";
+import { RideBuilder } from "../builders/ride-builder";
 
 describe("SqlRideDAO (integration)", () => {
   describe("save", () => {
