@@ -7,7 +7,7 @@ export class Signup {
   public constructor(private readonly accountDAO: AccountDAO) {}
 
   public async execute(input: any): Promise<SignupOutput | Error> {
-    const id = crypto.randomUUID();
+    const accountId = crypto.randomUUID();
     const existingAccount = await this.accountDAO.getByEmail(input.email);
     if (existingAccount)
       return new Error("Account with this email already exists");
@@ -16,11 +16,8 @@ export class Signup {
     if (!isValidCpf(input.cpf)) return new Error("Invalid CPF");
     if (input.isDriver && !this.isValidCarPlate(input.carPlate))
       return new Error("Invalid car plate");
-    await this.accountDAO.save({ ...input, id });
-
-    return {
-      accountId: id,
-    };
+    await this.accountDAO.save({ ...input, accountId });
+    return { accountId };
   }
 
   private isValidName(name: string): boolean {

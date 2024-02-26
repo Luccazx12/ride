@@ -4,7 +4,8 @@ import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../src/dtos/signup-output";
 import { GetAccount } from "../src/get-account";
 import { Signup } from "../src/signup";
-import { AccountDAO, SqlAccountDAO } from "../src/DAO/account-dao";
+import { AccountDAO } from "../src/DAO/account-dao";
+import { InMemoryAccountDAO } from "./doubles/in-memory-account-dao";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -22,7 +23,7 @@ const createFixture = (): Fixture => {
 };
 
 const createSubject = (): Subject => {
-  const accountDAO = new SqlAccountDAO();
+  const accountDAO = new InMemoryAccountDAO();
   return {
     accountDAO,
     signup: new Signup(accountDAO),
@@ -48,7 +49,7 @@ describe("Signup", () => {
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
-    expect(account.is_passenger).toBe(signupInput.isPassenger);
+    expect(account.isPassenger).toBe(signupInput.isPassenger);
   });
 
   it("should create account for driver", async () => {
@@ -69,7 +70,9 @@ describe("Signup", () => {
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
-    expect(account.is_passenger).toBe(signupInput.isPassenger);
+    expect(account.isPassenger).toBe(signupInput.isPassenger);
+    expect(account.isDriver).toBe(signupInput.isDriver);
+    expect(account.carPlate).toBe(signupInput.carPlate);
   });
 
   it("should return Error when email is already related to an account", async () => {

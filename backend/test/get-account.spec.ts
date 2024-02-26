@@ -3,7 +3,8 @@ import { SignupOutput } from "../src/dtos/signup-output";
 import { GetAccount } from "../src/get-account";
 import { Signup } from "../src/signup";
 import { SignUpInputBuilder } from "./builders/signup-input-builder";
-import { AccountDAO, SqlAccountDAO } from "../src/DAO/account-dao";
+import { AccountDAO } from "../src/DAO/account-dao";
+import { InMemoryAccountDAO } from "./doubles/in-memory-account-dao";
 
 interface Subject {
   getAccount: GetAccount;
@@ -11,7 +12,7 @@ interface Subject {
 }
 
 const createSubject = (): Subject => {
-  const accountDAO = new SqlAccountDAO();
+  const accountDAO = new InMemoryAccountDAO();
   return {
     accountDAO,
     getAccount: new GetAccount(accountDAO),
@@ -30,12 +31,13 @@ describe("GetAccount", () => {
     const account = await getAccount.execute(signupOutput.accountId);
 
     // then
+    expect(account.accountId).toEqual(signupOutput.accountId);
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
     expect(account.cpf).toBe(signupInput.cpf);
-    expect(account.is_passenger).toBe(signupInput.isPassenger);
-    expect(account.car_plate).toBe(signupInput.carPlate);
-    expect(account.is_driver).toBe(signupInput.isPassenger);
+    expect(account.isPassenger).toBe(signupInput.isPassenger);
+    expect(account.isDriver).toBe(signupInput.isDriver);
+    expect(account.carPlate).toBe(signupInput.carPlate);
   });
 
   it("should return null when account is not found by id", async () => {
