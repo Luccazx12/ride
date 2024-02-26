@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { SignupOutput } from "../src/dtos/signup-output";
-import { GetAccount } from "../src/get-account";
-import { Signup } from "../src/signup";
-import { SignUpInputBuilder } from "./builders/signup-input-builder";
-import { AccountDAO } from "../src/DAO/account-dao";
-import { InMemoryAccountDAO } from "./doubles/in-memory-account-dao";
-import { Account } from "../src/dtos/account";
+import { SignupOutput } from "../../src/dtos/signup-output";
+import { GetAccount } from "../../src/get-account";
+import { Signup } from "../../src/signup";
+import { SignUpInputBuilder } from "../builders/signup-input-builder";
+import { AccountDAO } from "../../src/DAO/account-dao";
+import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { Account } from "../../src/dtos/account";
 
 interface Subject {
   getAccount: GetAccount;
