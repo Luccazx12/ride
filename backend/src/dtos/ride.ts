@@ -8,7 +8,7 @@ export interface Coordinates {
   long: number;
 }
 
-export type Ride = {
+export type GetRideOutput = {
   rideId: string;
   passengerId: string;
   driverId?: string;

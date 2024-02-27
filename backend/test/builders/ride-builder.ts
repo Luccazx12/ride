@@ -1,11 +1,10 @@
 import { faker } from "@faker-js/faker";
-import { Ride, RideStatus } from "../../src/dtos/ride";
+import { Ride, RideStatus, RideProperties } from "../../src/ride";
 
 export class RideBuilder {
-  private props: Ride = {
+  private props: RideProperties = {
     rideId: faker.string.uuid(),
     fare: 0,
-    distance: 0,
     from: {
       lat: faker.location.latitude(),
       long: faker.location.longitude(),
@@ -30,6 +29,6 @@ export class RideBuilder {
   }
 
   public build(): Ride {
-    return this.props;
+    return Ride.restore(this.props);
   }
 }
