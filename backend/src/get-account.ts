@@ -1,11 +1,11 @@
-import { AccountRepository } from "./DAO/account-repository";
+import { AccountRepository } from "./repository/account-repository";
 import { GetAccountOutput } from "./dtos/get-account-output";
 
 export class GetAccount {
-  public constructor(private readonly AccountRepository: AccountRepository) {}
+  public constructor(private readonly accountRepository: AccountRepository) {}
 
   public async execute(id: string): Promise<GetAccountOutput | null> {
-    const account = await this.AccountRepository.getById(id);
+    const account = await this.accountRepository.getById(id);
     if (!account) return null;
     const accountProperties = account.getProperties();
     return {

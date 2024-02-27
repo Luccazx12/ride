@@ -3,7 +3,7 @@ import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetAccount } from "../../src/get-account";
 import { Signup } from "../../src/signup";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { AccountRepository } from "../../src/DAO/account-repository";
+import { AccountRepository } from "../../src/repository/account-repository";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";

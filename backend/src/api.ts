@@ -1,10 +1,10 @@
 import express from "express";
 import { Signup } from "./signup";
-import { SqlAccountRepository } from "./DAO/account-repository";
+import { SqlAccountRepository } from "./repository/account-repository";
 import { GetAccount } from "./get-account";
 import { ConsoleMailerGateway } from "./mailer-gateway";
 import { GetRide } from "./get-ride";
-import { SqlRideRepository } from "./DAO/ride-repository";
+import { SqlRideRepository } from "./repository/ride-repository";
 import { RequestRide } from "./request-ride";
 
 const app = express();
