@@ -1,4 +1,4 @@
-export type Account = {
+export type GetAccountOutput = {
   accountId: string;
   name: string;
   email: string;
@@ -6,4 +6,4 @@ export type Account = {
   carPlate: string;
   isPassenger: boolean;
   isDriver: boolean;
-}
+};

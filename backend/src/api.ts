@@ -1,6 +1,6 @@
 import express from "express";
 import { Signup } from "./signup";
-import { SqlAccountDAO } from './DAO/account-dao';
+import { SqlAccountDAO } from "./DAO/account-dao";
 import { GetAccount } from "./get-account";
 import { ConsoleMailerGateway } from "./mailer-gateway";
 import { GetRide } from "./get-ride";
@@ -14,8 +14,12 @@ app.post("/v1/signup", async (req, res) => {
   const signup = new Signup(new SqlAccountDAO(), new ConsoleMailerGateway());
   const signupOutput = await signup.execute(req.body);
 
-  if (signupOutput instanceof Error) {
-    res.status(422).json(signupOutput.message);
+  if (Array.isArray(signupOutput) && signupOutput[0] instanceof Error) {
+    res.status(422).json(
+      signupOutput.map((e) => ({
+        message: e.message,
+      }))
+    );
     return;
   }
 

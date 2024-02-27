@@ -6,8 +6,8 @@ import { GetAccount } from "../../src/get-account";
 import { Signup } from "../../src/signup";
 import { AccountDAO } from "../../src/DAO/account-dao";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
-import { Account } from "../../src/dtos/account";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
+import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -49,7 +49,7 @@ describe("Signup", () => {
     const getAccount = new GetAccount(accountDAO);
     const account = (await getAccount.execute(
       signupOutput.accountId
-    )) as Account;
+    )) as GetAccountOutput;
     expect(account).not.toBeNull();
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
@@ -73,7 +73,7 @@ describe("Signup", () => {
     const getAccount = new GetAccount(accountDAO);
     const account = (await getAccount.execute(
       signupOutput.accountId
-    )) as Account;
+    )) as GetAccountOutput;
     expect(account).not.toBeNull();
     expect(account.name).toBe(signupInput.name);
     expect(account.email).toBe(signupInput.email);
@@ -97,9 +97,9 @@ describe("Signup", () => {
     const signupOutput = await signup.execute(inputWithSameEmail);
 
     // then
-    expect(signupOutput).toEqual(
-      new Error("Account with this email already exists")
-    );
+    expect(signupOutput).toEqual([
+      new Error("Account with this email already exists"),
+    ]);
   });
 
   it("should return Error when name is invalid", async () => {
@@ -112,7 +112,7 @@ describe("Signup", () => {
     const signupOutput = await signup.execute(signupInput);
 
     // then
-    expect(signupOutput).toEqual(new Error("Invalid name"));
+    expect(signupOutput).toEqual([new Error("Invalid name")]);
   });
 
   it("should return Error when email is invalid", async () => {
@@ -127,7 +127,7 @@ describe("Signup", () => {
     const signupOutput = await signup.execute(signupInput);
 
     // then
-    expect(signupOutput).toEqual(new Error("Invalid email"));
+    expect(signupOutput).toEqual([new Error("Invalid email")]);
   });
 
   it.each([
@@ -147,7 +147,7 @@ describe("Signup", () => {
     const signupOutput = await signup.execute(signupInput);
 
     // then
-    expect(signupOutput).toEqual(new Error("Invalid CPF"));
+    expect(signupOutput).toEqual([new Error("Invalid CPF")]);
   });
 
   it("should return Error when carPlate is invalid and account is driver", async () => {
@@ -163,6 +163,34 @@ describe("Signup", () => {
     const signupOutput = await signup.execute(signupInput);
 
     // then
-    expect(signupOutput).toEqual(new Error("Invalid car plate"));
+    expect(signupOutput).toEqual([new Error("Invalid car plate")]);
+  });
+
+  it("should return all Errors when all data are invalid", async () => {
+    // given
+    const invalidName = faker.number.int().toString();
+    const invalidCpf = faker.number.bigInt().toString();
+    const invalidEmail = faker.lorem.words();
+    const invalidCarPlate = faker.lorem.word();
+
+    const signupInput = new SignUpInputBuilder()
+      .withIsDriver(true)
+      .withName(invalidName)
+      .withCpf(invalidCpf)
+      .withEmail(invalidEmail)
+      .withCarPlate(invalidCarPlate)
+      .build();
+    const { signup } = createSubject();
+
+    // when
+    const signupOutput = await signup.execute(signupInput);
+
+    // then
+    expect(signupOutput).toEqual([
+      new Error("Invalid CPF"),
+      new Error("Invalid name"),
+      new Error("Invalid email"),
+      new Error("Invalid car plate"),
+    ]);
   });
 });
