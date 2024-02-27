@@ -1,7 +1,14 @@
+import { RideDAO } from "../../src/DAO/ride-dao";
+import { RequestRideOutput } from "../../src/dtos/request-ride-output";
+import { Ride } from "../../src/dtos/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
+import { GetRide } from "../../src/get-ride";
+import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
+import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
 
 interface Subject {
   requestRide: RequestRide;
@@ -27,16 +34,18 @@ describe("RequestRide", () => {
     const { requestRide, signup, rideDAO } = createSubject();
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
-      .withAccountId(signupOutput.accountId)
+      .withPassengerId(signupOutput.accountId)
       .build();
 
     // when
-    const requestRideOutput = await requestRide.execute(requestRideInput);
+    const requestRideOutput = (await requestRide.execute(
+      requestRideInput
+    )) as RequestRideOutput;
 
     // then
     expect(requestRideOutput.rideId).toBeDefined();
     const getRide = new GetRide(rideDAO);
-    const ride = getRide.execute(requestRideOutput.rideId);
+    const ride = (await getRide.execute(requestRideOutput.rideId)) as Ride;
     expect(ride.passengerId).toEqual(signupOutput.accountId);
     expect(ride.status).toEqual("requested");
   });
@@ -45,9 +54,9 @@ describe("RequestRide", () => {
     // given
     const signupInput = new SignUpInputBuilder().withIsPassenger(true).build();
     const { requestRide, signup } = createSubject();
-    const signupOutput = await signup.execute(signupInput);
+    const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
-      .withAccountId(signupOutput.accountId)
+      .withPassengerId(signupOutput.accountId)
       .build();
     await requestRide.execute(requestRideInput);
 
@@ -76,9 +85,9 @@ describe("RequestRide", () => {
     // given
     const signupInput = new SignUpInputBuilder().withIsPassenger(false).build();
     const { requestRide, signup } = createSubject();
-    const signupOutput = await signup.execute(signupInput);
+    const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
-      .withAccountId(signupOutput.accountId)
+      .withPassengerId(signupOutput.accountId)
       .build();
 
     // when

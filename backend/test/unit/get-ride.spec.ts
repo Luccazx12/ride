@@ -1,8 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
+import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { SignupOutput } from "../../src/dtos/signup-output";
+import { GetRide } from "../../src/get-ride";
+import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
+import { Ride } from "../../src/dtos/ride";
+import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 
 interface Subject {
   requestRide: RequestRide;
@@ -28,29 +34,29 @@ describe("GetRide", () => {
     const { requestRide, signup, getRide } = createSubject();
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
-      .withAccountId(signupOutput.accountId)
+      .withPassengerId(signupOutput.accountId)
       .build();
     const requestRideOutput = (await requestRide.execute(
       requestRideInput
     )) as RequestRideOutput;
 
     // when
-    const ride = getRide.execute(requestRideOutput.rideId);
+    const ride = await getRide.execute(requestRideOutput.rideId) as Ride;
 
     // then
     expect(ride.passengerId).toEqual(signupOutput.accountId);
     expect(ride.status).toEqual("requested");
-    expect(ride.from).toEqual(ride.from);
-    expect(ride.to).toEqual(requestRideOutput.to);
+    expect(ride.from).toEqual(requestRideInput.from);
+    expect(ride.to).toEqual(requestRideInput.to);
   });
 
-  it("should return null when ride is not found", () => {
+  it("should return null when ride is not found", async () => {
     // given
     const { getRide } = createSubject();
     const rideId = faker.string.uuid();
 
     // when
-    const ride = getRide.execute(rideId);
+    const ride = await getRide.execute(rideId);
 
     // then
     expect(ride).toBeNull();
