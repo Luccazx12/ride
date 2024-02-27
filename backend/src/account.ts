@@ -37,6 +37,10 @@ export class Account {
     return this.properties.email;
   }
 
+  public get name(): string {
+    return this.properties.name;
+  }
+
   public get isDriver(): boolean {
     return this.properties.isDriver;
   }

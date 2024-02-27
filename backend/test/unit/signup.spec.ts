@@ -15,7 +15,7 @@ interface Fixture {
 
 interface Subject {
   signup: Signup;
-  AccountRepository: AccountRepository;
+  accountRepository: AccountRepository;
 }
 
 const createFixture = (): Fixture => {
@@ -25,10 +25,10 @@ const createFixture = (): Fixture => {
 };
 
 const createSubject = (): Subject => {
-  const AccountRepository = new InMemoryAccountRepository();
+  const accountRepository = new InMemoryAccountRepository();
   return {
-    AccountRepository,
-    signup: new Signup(AccountRepository, new NoopMailerGateway()),
+    accountRepository,
+    signup: new Signup(accountRepository, new NoopMailerGateway()),
   };
 };
 
@@ -39,14 +39,14 @@ describe("Signup", () => {
       .withIsDriver(false)
       .withIsPassenger(true)
       .build();
-    const { signup, AccountRepository } = createSubject();
+    const { signup, accountRepository } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const getAccount = new GetAccount(AccountRepository);
+    const getAccount = new GetAccount(accountRepository);
     const account = (await getAccount.execute(
       signupOutput.accountId
     )) as GetAccountOutput;
@@ -63,14 +63,14 @@ describe("Signup", () => {
       .withIsDriver(true)
       .withIsPassenger(false)
       .build();
-    const { signup, AccountRepository } = createSubject();
+    const { signup, accountRepository } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const getAccount = new GetAccount(AccountRepository);
+    const getAccount = new GetAccount(accountRepository);
     const account = (await getAccount.execute(
       signupOutput.accountId
     )) as GetAccountOutput;
