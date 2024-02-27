@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { SqlRideDAO } from "../../src/DAO/ride-dao";
 import { RideBuilder } from "../builders/ride-builder";
+import { RideStatus } from "../../src/dtos/ride";
 
 describe("SqlRideDAO (integration)", () => {
   describe("save", () => {
@@ -46,18 +47,19 @@ describe("SqlRideDAO (integration)", () => {
   });
 
   describe("listByPassengerId", () => {
-    it("should list rides by passengerId", async () => {
+    it("should list rides by passengerId and status", async () => {
       // given
       const dao = new SqlRideDAO();
       const firstRide = new RideBuilder().build();
       const secondRide = new RideBuilder()
         .withPassengerId(firstRide.passengerId)
+        .withStatus(firstRide.status)
         .build();
       await dao.save(firstRide);
       await dao.save(secondRide);
 
       // when
-      const rides = await dao.listByPassengerId(firstRide.passengerId);
+      const rides = await dao.listByPassengerId(firstRide.passengerId, firstRide.status);
 
       // then
       const expectedPersistedRides = [firstRide, secondRide];
@@ -70,7 +72,7 @@ describe("SqlRideDAO (integration)", () => {
       const dao = new SqlRideDAO();
 
       // when
-      const rides = await dao.listByPassengerId(faker.string.uuid());
+      const rides = await dao.listByPassengerId(faker.string.uuid(), RideStatus.accepted);
 
       // then
       expect(rides.length === 0).toBeTruthy();

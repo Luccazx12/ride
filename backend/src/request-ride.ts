@@ -21,12 +21,10 @@ export class RequestRide {
     if (!passengerAccount.isPassenger)
       return new Error("Account is not a passenger");
     const passengerRides = await this.rideDAO.listByPassengerId(
-      passengerAccount.accountId
+      passengerAccount.accountId,
+      RideStatus.requested
     );
-    const hasPendingRide = passengerRides.some(
-      (ride) => ride.status === RideStatus.requested
-    );
-    if (hasPendingRide)
+    if (passengerRides.length > 0)
       return new Error("Already exists an ride in progress for this passenger");
     const rideId = crypto.randomUUID();
     const ride = {
