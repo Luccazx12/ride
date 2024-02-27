@@ -42,7 +42,7 @@ app.get("/v1/accounts/:id", async (req, res) => {
 });
 
 app.get("/v1/ride/:id", async (req, res) => {
-  const getAccount = new GetRide(new SqlRideRepository());
+  const getAccount = new GetRide(new SqlRideRepository(), new SqlAccountRepository());
   const ride = await getAccount.execute(req.params.id);
 
   if (!ride) {

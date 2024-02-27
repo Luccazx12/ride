@@ -10,14 +10,14 @@ import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 interface Subject {
   getAccount: GetAccount;
-  AccountRepository: AccountRepository;
+  accountRepository: AccountRepository;
 }
 
 const createSubject = (): Subject => {
-  const AccountRepository = new InMemoryAccountRepository();
+  const accountRepository = new InMemoryAccountRepository();
   return {
-    AccountRepository,
-    getAccount: new GetAccount(AccountRepository),
+    accountRepository,
+    getAccount: new GetAccount(accountRepository),
   };
 };
 
@@ -25,8 +25,8 @@ describe("GetAccount", () => {
   it("should return account when account is found by id", async () => {
     // given
     const signupInput = new SignUpInputBuilder().build();
-    const { AccountRepository, getAccount } = createSubject();
-    const signup = new Signup(AccountRepository, new NoopMailerGateway());
+    const { accountRepository, getAccount } = createSubject();
+    const signup = new Signup(accountRepository, new NoopMailerGateway());
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // when

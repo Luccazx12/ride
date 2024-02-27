@@ -1,6 +1,5 @@
 import { RideRepository } from "../../src/repository/ride-repository";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
-import { Ride } from "../../src/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetRide } from "../../src/get-ride";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
@@ -11,21 +10,24 @@ import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
 import { GetRideOutput } from "../../src/dtos/ride";
+import { AccountRepository } from "../../src/repository/account-repository";
 
 interface Subject {
   requestRide: RequestRide;
   signup: Signup;
-  RideRepository: RideRepository;
+  rideRepository: RideRepository;
+  accountRepository: AccountRepository;
 }
 
 const createSubject = (): Subject => {
-  const AccountRepository = new InMemoryAccountRepository();
-  const RideRepository = new InMemoryRideRepository();
+  const accountRepository = new InMemoryAccountRepository();
+  const rideRepository = new InMemoryRideRepository();
 
   return {
-    RideRepository,
-    signup: new Signup(AccountRepository, new NoopMailerGateway()),
-    requestRide: new RequestRide(AccountRepository, RideRepository),
+    rideRepository,
+    accountRepository,
+    signup: new Signup(accountRepository, new NoopMailerGateway()),
+    requestRide: new RequestRide(accountRepository, rideRepository),
   };
 };
 
@@ -33,7 +35,7 @@ describe("RequestRide", () => {
   it("should request ride", async () => {
     // given
     const signupInput = new SignUpInputBuilder().withIsPassenger(true).build();
-    const { requestRide, signup, RideRepository } = createSubject();
+    const { requestRide, signup, rideRepository, accountRepository } = createSubject();
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
       .withPassengerId(signupOutput.accountId)
@@ -46,7 +48,7 @@ describe("RequestRide", () => {
 
     // then
     expect(requestRideOutput.rideId).toBeDefined();
-    const getRide = new GetRide(RideRepository);
+    const getRide = new GetRide(rideRepository, accountRepository);
     const ride = (await getRide.execute(
       requestRideOutput.rideId
     )) as GetRideOutput;

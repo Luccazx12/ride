@@ -11,6 +11,7 @@ export interface Coordinates {
 export type GetRideOutput = {
   rideId: string;
   passengerId: string;
+  passengerName: string;
   driverId?: string;
   status: RideStatus;
   fare: number;

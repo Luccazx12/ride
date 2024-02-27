@@ -7,7 +7,6 @@ import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
-import { Ride } from "../../src/ride";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
 import { GetRideOutput } from "../../src/dtos/ride";
@@ -19,13 +18,13 @@ interface Subject {
 }
 
 const createSubject = (): Subject => {
-  const AccountRepository = new InMemoryAccountRepository();
-  const RideRepository = new InMemoryRideRepository();
+  const accountRepository = new InMemoryAccountRepository();
+  const rideRepository = new InMemoryRideRepository();
 
   return {
-    signup: new Signup(AccountRepository, new NoopMailerGateway()),
-    requestRide: new RequestRide(AccountRepository, RideRepository),
-    getRide: new GetRide(RideRepository),
+    signup: new Signup(accountRepository, new NoopMailerGateway()),
+    requestRide: new RequestRide(accountRepository, rideRepository),
+    getRide: new GetRide(rideRepository, accountRepository),
   };
 };
 
@@ -53,6 +52,18 @@ describe("GetRide", () => {
     expect(ride.status).toEqual("requested");
     expect(ride.from).toEqual(requestRideInput.from);
     expect(ride.to).toEqual(requestRideInput.to);
+  });
+
+  it("should return null when ride is not found", async () => {
+    // given
+    const { getRide } = createSubject();
+    const rideId = faker.string.uuid();
+
+    // when
+    const ride = await getRide.execute(rideId);
+
+    // then
+    expect(ride).toBeNull();
   });
 
   it("should return null when ride is not found", async () => {
