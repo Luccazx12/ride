@@ -1,11 +1,16 @@
 import { RideDAO } from "../../src/DAO/ride-dao";
-import { Ride } from "../../src/dtos/ride";
+import { Ride, RideStatus } from "../../src/dtos/ride";
 
 export class InMemoryRideDAO implements RideDAO {
   private rides: Ride[] = [];
 
-  public async listByPassengerId(passengerId: string): Promise<Ride[]> {
-    return this.rides.filter((ride) => ride.passengerId === passengerId);
+  public async listByPassengerId(
+    passengerId: string,
+    status: RideStatus
+  ): Promise<Ride[]> {
+    return this.rides.filter(
+      (ride) => ride.passengerId === passengerId && ride.status === status
+    );
   }
 
   public async getById(id: string): Promise<Ride | null> {

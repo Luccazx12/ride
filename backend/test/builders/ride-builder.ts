@@ -19,6 +19,11 @@ export class RideBuilder {
     requestedAt: new Date(),
   };
 
+  public withStatus(status: RideStatus): this {
+    this.props.status = status;
+    return this;
+  }
+
   public withPassengerId(passengerId: string): this {
     this.props.passengerId = passengerId;
     return this;

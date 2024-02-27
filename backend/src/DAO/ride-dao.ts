@@ -1,18 +1,18 @@
 import pgp from "pg-promise";
-import { Ride } from "../dtos/ride";
+import { Ride, RideStatus } from "../dtos/ride";
 
 export interface RideDAO {
-  listByPassengerId(passengerId: string): Promise<Ride[]>;
+  listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;
   getById(id: string): Promise<Ride | null>;
   save(ride: Ride): Promise<void>;
 }
 
 export class SqlRideDAO implements RideDAO {
-  public async listByPassengerId(passengerId: string): Promise<Ride[]> {
+  public async listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]> {
     const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
     const rides = await connection.query(
-      "select * from ride.ride where passenger_id = $1",
-      [passengerId]
+      "select * from ride.ride where passenger_id = $1 and status = $2",
+      [passengerId, status]
     );
     await connection.$pool.end();
     return rides.map((ride: any) => this.mapToRide(ride));
