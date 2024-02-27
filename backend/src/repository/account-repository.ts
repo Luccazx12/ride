@@ -1,5 +1,5 @@
-import pgp from "pg-promise";
 import { Account } from "../account";
+import { DatabaseConnection } from "../database-connection";
 
 export interface AccountRepository {
   getByEmail(email: string): Promise<Account | null>;
@@ -8,33 +8,30 @@ export interface AccountRepository {
 }
 
 export class SqlAccountRepository implements AccountRepository {
+  public constructor(private readonly connection: DatabaseConnection) {}
+
   public async getByEmail(email: string): Promise<Account | null> {
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    const [account] = await connection.query(
+    const [account] = await this.connection.query(
       "select * from ride.account where email = $1",
       [email]
     );
-    await connection.$pool.end();
     if (!account) return null;
     return this.mapToAccount(account);
   }
 
   public async getById(id: string): Promise<Account | null> {
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    const [account] = await connection.query(
+    const [account] = await this.connection.query(
       "select * from ride.account where account_id = $1",
       [id]
     );
 
-    await connection.$pool.end();
     if (!account) return null;
     return this.mapToAccount(account);
   }
 
   public async save(account: Account): Promise<void> {
     const accountProperties = account.getProperties();
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    await connection.query(
+    await this.connection.query(
       "insert into ride.account (account_id, name, email, cpf, car_plate, is_passenger, is_driver) values ($1, $2, $3, $4, $5, $6, $7)",
       [
         accountProperties.accountId,
@@ -46,7 +43,6 @@ export class SqlAccountRepository implements AccountRepository {
         !!accountProperties.isDriver,
       ]
     );
-    await connection.$pool.end();
   }
 
   private mapToAccount(databaseAccount: any): Account {

@@ -1,12 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { SqlAccountRepository } from "../../src/repository/account-repository";
 import { AccountBuilder } from "../builders/account-builder";
+import { PgPromiseAdapter } from "../../src/database-connection";
 
 describe("SqlAccountRepository (integration)", () => {
   describe("save", () => {
     it("should create account", async () => {
       // given
-      const dao = new SqlAccountRepository();
+      const dao = new SqlAccountRepository(new PgPromiseAdapter());
       const account = new AccountBuilder().build();
 
       // when
@@ -21,7 +22,7 @@ describe("SqlAccountRepository (integration)", () => {
   describe("getById", () => {
     it("should get account by id", async () => {
       // given
-      const dao = new SqlAccountRepository();
+      const dao = new SqlAccountRepository(new PgPromiseAdapter());
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -36,7 +37,7 @@ describe("SqlAccountRepository (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountRepository();
+      const dao = new SqlAccountRepository(new PgPromiseAdapter());
 
       // when
       const foundAccount = await dao.getById(faker.string.uuid());
@@ -49,7 +50,7 @@ describe("SqlAccountRepository (integration)", () => {
   describe("getByEmail", () => {
     it("should get account by email", async () => {
       // given
-      const dao = new SqlAccountRepository();
+      const dao = new SqlAccountRepository(new PgPromiseAdapter());
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -64,7 +65,7 @@ describe("SqlAccountRepository (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountRepository();
+      const dao = new SqlAccountRepository(new PgPromiseAdapter());
 
       // when
       const foundAccount = await dao.getByEmail(faker.internet.email());

@@ -6,13 +6,15 @@ import { ConsoleMailerGateway } from "./mailer-gateway";
 import { GetRide } from "./get-ride";
 import { SqlRideRepository } from "./repository/ride-repository";
 import { RequestRide } from "./request-ride";
+import { PgPromiseAdapter } from "./database-connection";
 
 const app = express();
 app.use(express.json());
 
 app.post("/v1/signup", async (req, res) => {
+  const connection = new PgPromiseAdapter();
   const signup = new Signup(
-    new SqlAccountRepository(),
+    new SqlAccountRepository(connection),
     new ConsoleMailerGateway()
   );
   const signupOutput = await signup.execute(req.body);
@@ -30,7 +32,8 @@ app.post("/v1/signup", async (req, res) => {
 });
 
 app.get("/v1/accounts/:id", async (req, res) => {
-  const getAccount = new GetAccount(new SqlAccountRepository());
+  const connection = new PgPromiseAdapter();
+  const getAccount = new GetAccount(new SqlAccountRepository(connection));
   const account = await getAccount.execute(req.params.id);
 
   if (!account) {
@@ -42,7 +45,11 @@ app.get("/v1/accounts/:id", async (req, res) => {
 });
 
 app.get("/v1/ride/:id", async (req, res) => {
-  const getAccount = new GetRide(new SqlRideRepository(), new SqlAccountRepository());
+  const connection = new PgPromiseAdapter();
+  const getAccount = new GetRide(
+    new SqlRideRepository(connection),
+    new SqlAccountRepository(connection)
+  );
   const ride = await getAccount.execute(req.params.id);
 
   if (!ride) {
@@ -54,9 +61,10 @@ app.get("/v1/ride/:id", async (req, res) => {
 });
 
 app.post("/v1/request_ride", async (req, res) => {
+  const connection = new PgPromiseAdapter();
   const requestRide = new RequestRide(
-    new SqlAccountRepository(),
-    new SqlRideRepository()
+    new SqlAccountRepository(connection),
+    new SqlRideRepository(connection)
   );
   const requestRideOutput = await requestRide.execute(req.body);
 
