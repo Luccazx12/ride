@@ -1,5 +1,5 @@
-import pgp from "pg-promise";
 import { Ride, RideProperties, RideStatus } from "../ride";
+import { DatabaseConnection } from "../database-connection";
 
 export interface RideRepository {
   listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;
@@ -8,35 +8,31 @@ export interface RideRepository {
 }
 
 export class SqlRideRepository implements RideRepository {
+  public constructor(private readonly connection: DatabaseConnection) {}
+
   public async listByPassengerId(
     passengerId: string,
     status: RideStatus
   ): Promise<Ride[]> {
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    const rides = await connection.query(
+    const rides = await this.connection.query(
       "select * from ride.ride where passenger_id = $1 and status = $2",
       [passengerId, status]
     );
-    await connection.$pool.end();
     return rides.map((ride: any) => this.mapToRide(ride));
   }
 
   public async getById(id: string): Promise<Ride | null> {
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    const [ride] = await connection.query(
+    const [ride] = await this.connection.query(
       "select * from ride.ride where ride_id = $1",
       [id]
     );
-
-    await connection.$pool.end();
     if (!ride) return null;
     return this.mapToRide(ride);
   }
 
   public async save(ride: Ride): Promise<void> {
     const rideProperties = ride.getProperties();
-    const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
-    await connection.query(
+    await this.connection.query(
       "INSERT INTO ride.ride (ride_id, passenger_id, driver_id, status, fare, distance, from_lat, from_long, to_lat, to_long, requested_at, accepted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
       [
         rideProperties.rideId,
@@ -53,7 +49,6 @@ export class SqlRideRepository implements RideRepository {
         rideProperties.acceptedAt,
       ]
     );
-    await connection.$pool.end();
   }
 
   private mapToRide(databaseRide: any): Ride {
