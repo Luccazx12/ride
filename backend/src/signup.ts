@@ -3,9 +3,13 @@ import { SignupOutput } from "./dtos/signup-output";
 import { isValidCpf } from "./cpf-validation";
 import { AccountDAO } from "./DAO/account-dao";
 import { SignupInput } from "./dtos/signup-input";
+import { MailerGateway } from "./mailer-gateway";
 
 export class Signup {
-  public constructor(private readonly accountDAO: AccountDAO) {}
+  public constructor(
+    private readonly accountDAO: AccountDAO,
+    private readonly mailerGateway: MailerGateway
+  ) {}
 
   public async execute(input: SignupInput): Promise<SignupOutput | Error> {
     const accountId = crypto.randomUUID();
@@ -18,6 +22,11 @@ export class Signup {
     if (input.isDriver && !this.isValidCarPlate(input.carPlate))
       return new Error("Invalid car plate");
     await this.accountDAO.save({ ...input, accountId });
+    await this.mailerGateway.send(
+      "Welcome",
+      input.email,
+      "Use this link to confirm your account"
+    );
     return { accountId };
   }
 

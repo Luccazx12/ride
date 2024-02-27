@@ -7,6 +7,7 @@ import { Signup } from "../../src/signup";
 import { AccountDAO } from "../../src/DAO/account-dao";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
 import { Account } from "../../src/dtos/account";
+import { NoopMailerGateway } from "../../src/mailer-gateway";
 
 interface Fixture {
   signupInput: SignupInput;
@@ -27,7 +28,7 @@ const createSubject = (): Subject => {
   const accountDAO = new InMemoryAccountDAO();
   return {
     accountDAO,
-    signup: new Signup(accountDAO),
+    signup: new Signup(accountDAO, new NoopMailerGateway()),
   };
 };
 
