@@ -55,7 +55,7 @@ describe("SqlAccountDAO (integration)", () => {
       await dao.save(account);
 
       // when
-      const foundAccount = await dao.getByEmail(account.accountId);
+      const foundAccount = await dao.getByEmail(account.email);
 
       // then
       expect(foundAccount).toBeDefined();

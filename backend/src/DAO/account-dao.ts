@@ -48,13 +48,15 @@ export class SqlAccountDAO implements AccountDAO {
     await connection.$pool.end();
   }
 
-  private mapToAccount(databaseAccount: any): Promise<Account | null> {
+  private mapToAccount(databaseAccount: any): Account {
     return {
-      ...databaseAccount,
       accountId: databaseAccount.account_id,
       carPlate: databaseAccount.car_plate,
       isPassenger: databaseAccount.is_passenger,
       isDriver: databaseAccount.is_driver,
+      cpf: databaseAccount.cpf,
+      email: databaseAccount.email,
+      name: databaseAccount.name,
     };
   }
 }
