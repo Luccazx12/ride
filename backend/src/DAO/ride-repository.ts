@@ -1,13 +1,13 @@
 import pgp from "pg-promise";
 import { Ride, RideProperties, RideStatus } from "../ride";
 
-export interface RideDAO {
+export interface RideRepository {
   listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;
   getById(id: string): Promise<Ride | null>;
   save(ride: Ride): Promise<void>;
 }
 
-export class SqlRideDAO implements RideDAO {
+export class SqlRideRepository implements RideRepository {
   public async listByPassengerId(
     passengerId: string,
     status: RideStatus

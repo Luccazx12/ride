@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
-import { SqlRideDAO } from "../../src/DAO/ride-dao";
+import { SqlRideRepository } from "../../src/DAO/ride-repository";
 import { RideBuilder } from "../builders/ride-builder";
 import { RideStatus } from "../../src/dtos/ride";
 
-describe("SqlRideDAO (integration)", () => {
+describe("SqlRideRepository (integration)", () => {
   describe("save", () => {
     it("should create ride", async () => {
       // given
-      const dao = new SqlRideDAO();
+      const dao = new SqlRideRepository();
       const ride = new RideBuilder().build();
 
       // when
@@ -22,7 +22,7 @@ describe("SqlRideDAO (integration)", () => {
   describe("getById", () => {
     it("should get ride by id", async () => {
       // given
-      const dao = new SqlRideDAO();
+      const dao = new SqlRideRepository();
       const ride = new RideBuilder().build();
       await dao.save(ride);
 
@@ -36,7 +36,7 @@ describe("SqlRideDAO (integration)", () => {
 
     it("should return null when ride is not found by id", async () => {
       // given
-      const dao = new SqlRideDAO();
+      const dao = new SqlRideRepository();
 
       // when
       const foundRide = await dao.getById(faker.string.uuid());
@@ -49,7 +49,7 @@ describe("SqlRideDAO (integration)", () => {
   describe("listByPassengerId", () => {
     it("should list rides by passengerId and status", async () => {
       // given
-      const dao = new SqlRideDAO();
+      const dao = new SqlRideRepository();
       const firstRide = new RideBuilder().build();
       const secondRide = new RideBuilder()
         .withPassengerId(firstRide.passengerId)
@@ -72,7 +72,7 @@ describe("SqlRideDAO (integration)", () => {
 
     it("should return empty array when rides is not found", async () => {
       // given
-      const dao = new SqlRideDAO();
+      const dao = new SqlRideRepository();
 
       // when
       const rides = await dao.listByPassengerId(

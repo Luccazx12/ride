@@ -4,7 +4,7 @@ import { SqlAccountRepository } from "./DAO/account-repository";
 import { GetAccount } from "./get-account";
 import { ConsoleMailerGateway } from "./mailer-gateway";
 import { GetRide } from "./get-ride";
-import { SqlRideDAO } from "./DAO/ride-dao";
+import { SqlRideRepository } from "./DAO/ride-repository";
 import { RequestRide } from "./request-ride";
 
 const app = express();
@@ -42,7 +42,7 @@ app.get("/v1/accounts/:id", async (req, res) => {
 });
 
 app.get("/v1/ride/:id", async (req, res) => {
-  const getAccount = new GetRide(new SqlRideDAO());
+  const getAccount = new GetRide(new SqlRideRepository());
   const ride = await getAccount.execute(req.params.id);
 
   if (!ride) {
@@ -56,7 +56,7 @@ app.get("/v1/ride/:id", async (req, res) => {
 app.post("/v1/request_ride", async (req, res) => {
   const requestRide = new RequestRide(
     new SqlAccountRepository(),
-    new SqlRideDAO()
+    new SqlRideRepository()
   );
   const requestRideOutput = await requestRide.execute(req.body);
 
