@@ -6,6 +6,7 @@ import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { AccountDAO } from "../../src/DAO/account-dao";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
 import { Account } from "../../src/dtos/account";
+import { NoopMailerGateway } from "../../src/mailer-gateway";
 
 interface Subject {
   getAccount: GetAccount;
@@ -25,7 +26,7 @@ describe("GetAccount", () => {
     // given
     const signupInput = new SignUpInputBuilder().build();
     const { accountDAO, getAccount } = createSubject();
-    const signup = new Signup(accountDAO);
+    const signup = new Signup(accountDAO, new NoopMailerGateway());
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // when

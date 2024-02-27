@@ -9,6 +9,7 @@ import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
 import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
 import { Ride } from "../../src/dtos/ride";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
+import { NoopMailerGateway } from "../../src/mailer-gateway";
 
 interface Subject {
   requestRide: RequestRide;
@@ -21,7 +22,7 @@ const createSubject = (): Subject => {
   const rideDAO = new InMemoryRideDAO();
 
   return {
-    signup: new Signup(accountDAO),
+    signup: new Signup(accountDAO, new NoopMailerGateway()),
     requestRide: new RequestRide(accountDAO, rideDAO),
     getRide: new GetRide(rideDAO),
   };

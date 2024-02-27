@@ -3,6 +3,7 @@ import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { Ride } from "../../src/dtos/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetRide } from "../../src/get-ride";
+import { NoopMailerGateway } from "../../src/mailer-gateway";
 import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
@@ -22,7 +23,7 @@ const createSubject = (): Subject => {
 
   return {
     rideDAO,
-    signup: new Signup(accountDAO),
+    signup: new Signup(accountDAO, new NoopMailerGateway()),
     requestRide: new RequestRide(accountDAO, rideDAO),
   };
 };

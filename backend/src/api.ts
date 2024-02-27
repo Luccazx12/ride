@@ -2,11 +2,12 @@ import express from "express";
 import { Signup } from "./signup";
 import { SqlAccountDAO } from "./DAO/account-dao";
 import { GetAccount } from "./get-account";
+import { ConsoleMailerGateway } from "./mailer-gateway";
 const app = express();
 app.use(express.json());
 
 app.post("/v1/signup", async (req, res) => {
-  const signup = new Signup(new SqlAccountDAO());
+  const signup = new Signup(new SqlAccountDAO(), new ConsoleMailerGateway());
   const signupOutput = await signup.execute(req.body);
 
   if (signupOutput instanceof Error) {
