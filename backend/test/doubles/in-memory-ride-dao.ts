@@ -1,4 +1,4 @@
-import { RideRepository } from "../../src/DAO/ride-repository";
+import { RideRepository } from "../../src/repository/ride-repository";
 import { Ride, RideStatus } from "../../src/ride";
 
 export class InMemoryRideRepository implements RideRepository {

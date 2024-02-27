@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { SqlAccountRepository } from "../../src/DAO/account-repository";
+import { SqlAccountRepository } from "../../src/repository/account-repository";
 import { AccountBuilder } from "../builders/account-builder";
 
 describe("SqlAccountRepository (integration)", () => {

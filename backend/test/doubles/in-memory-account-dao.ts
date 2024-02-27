@@ -1,4 +1,4 @@
-import { AccountRepository } from "../../src/DAO/account-repository";
+import { AccountRepository } from "../../src/repository/account-repository";
 import { Account } from "../../src/account";
 
 export class InMemoryAccountRepository implements AccountRepository {

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { SqlRideRepository } from "../../src/DAO/ride-repository";
+import { SqlRideRepository } from "../../src/repository/ride-repository";
 import { RideBuilder } from "../builders/ride-builder";
 import { RideStatus } from "../../src/dtos/ride";
 

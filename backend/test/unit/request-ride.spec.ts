@@ -1,4 +1,4 @@
-import { RideRepository } from "../../src/DAO/ride-repository";
+import { RideRepository } from "../../src/repository/ride-repository";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { Ride } from "../../src/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
