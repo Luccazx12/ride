@@ -1,6 +1,6 @@
 import { Coordinates } from "./ride";
 
-export interface RequestRideInput {
+export type RequestRideInput = {
   passengerId: string;
   from: Coordinates;
   to: Coordinates;

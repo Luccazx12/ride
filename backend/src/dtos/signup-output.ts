@@ -1,3 +1,3 @@
-export interface SignupOutput {
+export type SignupOutput = {
   accountId: string;
 }
