@@ -1,13 +1,13 @@
 import pgp from "pg-promise";
 import { Account } from "../account";
 
-export interface AccountDAO {
+export interface AccountRepository {
   getByEmail(email: string): Promise<Account | null>;
   getById(id: string): Promise<Account | null>;
   save(account: Account): Promise<void>;
 }
 
-export class SqlAccountDAO implements AccountDAO {
+export class SqlAccountRepository implements AccountRepository {
   public async getByEmail(email: string): Promise<Account | null> {
     const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
     const [account] = await connection.query(

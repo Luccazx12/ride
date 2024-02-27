@@ -4,8 +4,8 @@ import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetAccount } from "../../src/get-account";
 import { Signup } from "../../src/signup";
-import { AccountDAO } from "../../src/DAO/account-dao";
-import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { AccountRepository } from "../../src/DAO/account-repository";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
@@ -15,7 +15,7 @@ interface Fixture {
 
 interface Subject {
   signup: Signup;
-  accountDAO: AccountDAO;
+  AccountRepository: AccountRepository;
 }
 
 const createFixture = (): Fixture => {
@@ -25,10 +25,10 @@ const createFixture = (): Fixture => {
 };
 
 const createSubject = (): Subject => {
-  const accountDAO = new InMemoryAccountDAO();
+  const AccountRepository = new InMemoryAccountRepository();
   return {
-    accountDAO,
-    signup: new Signup(accountDAO, new NoopMailerGateway()),
+    AccountRepository,
+    signup: new Signup(AccountRepository, new NoopMailerGateway()),
   };
 };
 
@@ -39,14 +39,14 @@ describe("Signup", () => {
       .withIsDriver(false)
       .withIsPassenger(true)
       .build();
-    const { signup, accountDAO } = createSubject();
+    const { signup, AccountRepository } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const getAccount = new GetAccount(accountDAO);
+    const getAccount = new GetAccount(AccountRepository);
     const account = (await getAccount.execute(
       signupOutput.accountId
     )) as GetAccountOutput;
@@ -63,14 +63,14 @@ describe("Signup", () => {
       .withIsDriver(true)
       .withIsPassenger(false)
       .build();
-    const { signup, accountDAO } = createSubject();
+    const { signup, AccountRepository } = createSubject();
 
     // when
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // then
     expect(signupOutput).toHaveProperty("accountId");
-    const getAccount = new GetAccount(accountDAO);
+    const getAccount = new GetAccount(AccountRepository);
     const account = (await getAccount.execute(
       signupOutput.accountId
     )) as GetAccountOutput;

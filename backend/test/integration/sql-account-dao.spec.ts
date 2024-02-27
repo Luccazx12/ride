@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker";
-import { SqlAccountDAO } from "../../src/DAO/account-dao";
+import { SqlAccountRepository } from "../../src/DAO/account-repository";
 import { AccountBuilder } from "../builders/account-builder";
 
-describe("SqlAccountDAO (integration)", () => {
+describe("SqlAccountRepository (integration)", () => {
   describe("save", () => {
     it("should create account", async () => {
       // given
-      const dao = new SqlAccountDAO();
+      const dao = new SqlAccountRepository();
       const account = new AccountBuilder().build();
 
       // when
@@ -21,7 +21,7 @@ describe("SqlAccountDAO (integration)", () => {
   describe("getById", () => {
     it("should get account by id", async () => {
       // given
-      const dao = new SqlAccountDAO();
+      const dao = new SqlAccountRepository();
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -36,7 +36,7 @@ describe("SqlAccountDAO (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountDAO();
+      const dao = new SqlAccountRepository();
 
       // when
       const foundAccount = await dao.getById(faker.string.uuid());
@@ -49,7 +49,7 @@ describe("SqlAccountDAO (integration)", () => {
   describe("getByEmail", () => {
     it("should get account by email", async () => {
       // given
-      const dao = new SqlAccountDAO();
+      const dao = new SqlAccountRepository();
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -64,7 +64,7 @@ describe("SqlAccountDAO (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountDAO();
+      const dao = new SqlAccountRepository();
 
       // when
       const foundAccount = await dao.getByEmail(faker.internet.email());
