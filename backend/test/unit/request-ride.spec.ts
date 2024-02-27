@@ -69,7 +69,7 @@ describe("RequestRide", () => {
     );
   });
 
-  it("should return error when account is not found", async () => {
+  it("should return error when passenger is not found", async () => {
     // given
     const { requestRide } = createSubject();
     const requestRideInput = new RequestRideInputBuilder().build();
@@ -78,7 +78,7 @@ describe("RequestRide", () => {
     const requestRideOutput = await requestRide.execute(requestRideInput);
 
     // then
-    expect(requestRideOutput).toEqual(new Error("Account not found"));
+    expect(requestRideOutput).toEqual(new Error("Passenger not found"));
   });
 
   it("should return error when account is not passenger", async () => {

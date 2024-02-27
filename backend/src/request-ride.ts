@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { AccountDAO } from "./DAO/account-dao";
 import { RideDAO } from "./DAO/ride-dao";
 import { RequestRideInput } from "./dtos/request-ride-input";
