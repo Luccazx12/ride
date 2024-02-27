@@ -41,10 +41,10 @@ export class SqlRideDAO implements RideDAO {
         ride.status,
         ride.fare,
         ride.distance,
-        ride.from.long,
         ride.from.lat,
-        ride.to.long,
+        ride.from.long,
         ride.to.lat,
+        ride.to.long,
         ride.requestedAt,
         ride.acceptedAt,
       ]
@@ -53,23 +53,27 @@ export class SqlRideDAO implements RideDAO {
   }
 
   private mapToRide(databaseRide: any): Ride {
-    return {
+    const data: Partial<Ride> = {
       rideId: databaseRide.ride_id,
       passengerId: databaseRide.passenger_id,
-      driverId: databaseRide.driver_id,
       status: databaseRide.status,
-      fare: databaseRide.fare,
-      distance: databaseRide.distance,
+      fare: Number(databaseRide.fare),
+      distance: Number(databaseRide.distance),
       from: {
-        long: databaseRide.from_long,
-        lat: databaseRide.from_lat,
+        long: Number(databaseRide.from_long),
+        lat: Number(databaseRide.from_lat),
       },
       to: {
-        long: databaseRide.to_long,
-        lat: databaseRide.to_lat,
+        long: Number(databaseRide.to_long),
+        lat: Number(databaseRide.to_lat),
       },
-      requestedAt: databaseRide.requestedAt,
-      acceptedAt: databaseRide.acceptedAt,
+      requestedAt: new Date(databaseRide.requested_at),
     };
+
+    if (databaseRide.acceptedAt)
+      data.acceptedAt = new Date(databaseRide.acceptedAt);
+    if (databaseRide.driver_id) data.driverId = databaseRide.driver_id;
+
+    return data as Ride;
   }
 }
