@@ -33,7 +33,7 @@ describe("GetAccount (e2e)", () => {
     expect(getAccountOutput.carPlate).toEqual(signupInput.carPlate);
   });
 
-  it("should 404 when account not exists", async () => {
+  it("should return 404 status code when account not exists", async () => {
     // given
     const accountId = faker.string.uuid();
 
