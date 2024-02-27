@@ -19,7 +19,7 @@ export class RequestRide {
     if (!passengerAccount) return new Error("Passenger not found");
     if (!passengerAccount.isPassenger)
       return new Error("Account is not a passenger");
-    const passengerRides = await this.rideDAO.getByPassengerId(
+    const passengerRides = await this.rideDAO.listByPassengerId(
       passengerAccount.accountId
     );
     const hasPendingRide = passengerRides.some(
