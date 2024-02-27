@@ -39,7 +39,7 @@ describe("GetRide (e2e)", () => {
     expect(rideOutput.status).toBe(RideStatus.requested);
   });
 
-  it.only("should return 404 status code when ride not exists", async () => {
+  it("should return 404 status code when ride not exists", async () => {
     // given
     const rideId = faker.string.uuid();
 
