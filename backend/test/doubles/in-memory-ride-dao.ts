@@ -1,7 +1,7 @@
-import { RideDAO } from "../../src/DAO/ride-dao";
+import { RideRepository } from "../../src/DAO/ride-repository";
 import { Ride, RideStatus } from "../../src/ride";
 
-export class InMemoryRideDAO implements RideDAO {
+export class InMemoryRideRepository implements RideRepository {
   private rides: Ride[] = [];
 
   public async listByPassengerId(

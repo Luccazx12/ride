@@ -1,5 +1,5 @@
 import { AccountRepository } from "./DAO/account-repository";
-import { RideDAO } from "./DAO/ride-dao";
+import { RideRepository } from "./DAO/ride-repository";
 import { RequestRideInput } from "./dtos/request-ride-input";
 import { RequestRideOutput } from "./dtos/request-ride-output";
 import { RideStatus } from "./dtos/ride";
@@ -8,7 +8,7 @@ import { Ride } from "./ride";
 export class RequestRide {
   public constructor(
     private readonly AccountRepository: AccountRepository,
-    private readonly rideDAO: RideDAO
+    private readonly RideRepository: RideRepository
   ) {}
 
   public async execute(
@@ -20,14 +20,14 @@ export class RequestRide {
     if (!passengerAccount) return new Error("Passenger not found");
     if (!passengerAccount.isPassenger)
       return new Error("Account is not a passenger");
-    const passengerRides = await this.rideDAO.listByPassengerId(
+    const passengerRides = await this.RideRepository.listByPassengerId(
       passengerAccount.accountId,
       RideStatus.requested
     );
     if (passengerRides.length > 0)
       return new Error("Already exists an ride in progress for this passenger");
     const ride = Ride.create({ ...input, fare: 0 });
-    await this.rideDAO.save(ride);
+    await this.RideRepository.save(ride);
     return { rideId: ride.rideId };
   }
 }

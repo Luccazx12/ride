@@ -1,4 +1,4 @@
-import { RideDAO } from "../../src/DAO/ride-dao";
+import { RideRepository } from "../../src/DAO/ride-repository";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { Ride } from "../../src/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
@@ -9,23 +9,23 @@ import { Signup } from "../../src/signup";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
-import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
+import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
 import { GetRideOutput } from "../../src/dtos/ride";
 
 interface Subject {
   requestRide: RequestRide;
   signup: Signup;
-  rideDAO: RideDAO;
+  RideRepository: RideRepository;
 }
 
 const createSubject = (): Subject => {
   const AccountRepository = new InMemoryAccountRepository();
-  const rideDAO = new InMemoryRideDAO();
+  const RideRepository = new InMemoryRideRepository();
 
   return {
-    rideDAO,
+    RideRepository,
     signup: new Signup(AccountRepository, new NoopMailerGateway()),
-    requestRide: new RequestRide(AccountRepository, rideDAO),
+    requestRide: new RequestRide(AccountRepository, RideRepository),
   };
 };
 
@@ -33,7 +33,7 @@ describe("RequestRide", () => {
   it("should request ride", async () => {
     // given
     const signupInput = new SignUpInputBuilder().withIsPassenger(true).build();
-    const { requestRide, signup, rideDAO } = createSubject();
+    const { requestRide, signup, RideRepository } = createSubject();
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
       .withPassengerId(signupOutput.accountId)
@@ -46,8 +46,10 @@ describe("RequestRide", () => {
 
     // then
     expect(requestRideOutput.rideId).toBeDefined();
-    const getRide = new GetRide(rideDAO);
-    const ride = (await getRide.execute(requestRideOutput.rideId)) as GetRideOutput;
+    const getRide = new GetRide(RideRepository);
+    const ride = (await getRide.execute(
+      requestRideOutput.rideId
+    )) as GetRideOutput;
     expect(ride.passengerId).toEqual(signupOutput.accountId);
     expect(ride.status).toEqual("requested");
   });
