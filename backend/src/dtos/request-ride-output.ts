@@ -1,3 +1,3 @@
-export interface RequestRideOutput {
+export type RequestRideOutput = {
   rideId: string;
 }

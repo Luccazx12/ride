@@ -1,4 +1,4 @@
-export interface Account {
+export type Account = {
   accountId: string;
   name: string;
   email: string;
