@@ -48,6 +48,7 @@ describe("GetRide", () => {
     )) as GetRideOutput;
 
     // then
+    expect(ride.passengerName).toEqual(signupInput.name);
     expect(ride.passengerId).toEqual(signupOutput.accountId);
     expect(ride.status).toEqual("requested");
     expect(ride.from).toEqual(requestRideInput.from);

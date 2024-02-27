@@ -35,6 +35,7 @@ describe("GetRide (e2e)", () => {
     // then
     expect(rideResponse.status).toBe(200);
     expect(rideOutput).toBeDefined();
+    expect(rideOutput.passengerName).toEqual(signupInput.name);
     expect(rideOutput.passengerId).toEqual(requestRideInput.passengerId);
     expect(rideOutput.status).toBe(RideStatus.requested);
   });
