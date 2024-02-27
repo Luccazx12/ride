@@ -5,8 +5,8 @@ import { Signup } from "../../src/signup";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { AccountDAO } from "../../src/DAO/account-dao";
 import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
-import { Account } from "../../src/dtos/account";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
+import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 interface Subject {
   getAccount: GetAccount;
@@ -32,7 +32,7 @@ describe("GetAccount", () => {
     // when
     const account = (await getAccount.execute(
       signupOutput.accountId
-    )) as Account;
+    )) as GetAccountOutput;
 
     // then
     expect(account).not.toBeNull();

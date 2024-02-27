@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { cpf } from "cpf-cnpj-validator";
-import { Account } from "../../src/dtos/account";
+import { Account, AccountProperties } from "../../src/account";
 
 export class AccountBuilder {
-  private props: Account = {
+  private props: AccountProperties = {
     accountId: faker.string.uuid(),
     name: faker.person.fullName(),
     cpf: cpf.generate(false),
@@ -19,6 +19,6 @@ export class AccountBuilder {
   };
 
   public build(): Account {
-    return this.props;
+    return Account.restore(this.props);
   }
 }

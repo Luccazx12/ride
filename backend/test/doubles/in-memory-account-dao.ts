@@ -1,5 +1,5 @@
 import { AccountDAO } from "../../src/DAO/account-dao";
-import { Account } from "../../src/dtos/account";
+import { Account } from "../../src/account";
 
 export class InMemoryAccountDAO implements AccountDAO {
   private accounts: Account[] = [];
