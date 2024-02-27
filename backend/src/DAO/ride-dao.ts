@@ -1,5 +1,5 @@
 import pgp from "pg-promise";
-import { Ride, RideStatus } from "../dtos/ride";
+import { Ride, RideProperties, RideStatus } from "../ride";
 
 export interface RideDAO {
   listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;
@@ -8,7 +8,10 @@ export interface RideDAO {
 }
 
 export class SqlRideDAO implements RideDAO {
-  public async listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]> {
+  public async listByPassengerId(
+    passengerId: string,
+    status: RideStatus
+  ): Promise<Ride[]> {
     const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
     const rides = await connection.query(
       "select * from ride.ride where passenger_id = $1 and status = $2",
@@ -31,34 +34,34 @@ export class SqlRideDAO implements RideDAO {
   }
 
   public async save(ride: Ride): Promise<void> {
+    const rideProperties = ride.getProperties();
     const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
     await connection.query(
       "INSERT INTO ride.ride (ride_id, passenger_id, driver_id, status, fare, distance, from_lat, from_long, to_lat, to_long, requested_at, accepted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
       [
-        ride.rideId,
-        ride.passengerId,
-        ride.driverId,
-        ride.status,
-        ride.fare,
+        rideProperties.rideId,
+        rideProperties.passengerId,
+        rideProperties.driverId,
+        rideProperties.status,
+        rideProperties.fare,
         ride.distance,
-        ride.from.lat,
-        ride.from.long,
-        ride.to.lat,
-        ride.to.long,
-        ride.requestedAt,
-        ride.acceptedAt,
+        rideProperties.from.lat,
+        rideProperties.from.long,
+        rideProperties.to.lat,
+        rideProperties.to.long,
+        rideProperties.requestedAt,
+        rideProperties.acceptedAt,
       ]
     );
     await connection.$pool.end();
   }
 
   private mapToRide(databaseRide: any): Ride {
-    const data: Partial<Ride> = {
+    const data: Partial<RideProperties> = {
       rideId: databaseRide.ride_id,
       passengerId: databaseRide.passenger_id,
       status: databaseRide.status,
       fare: Number(databaseRide.fare),
-      distance: Number(databaseRide.distance),
       from: {
         long: Number(databaseRide.from_long),
         lat: Number(databaseRide.from_lat),
@@ -74,6 +77,6 @@ export class SqlRideDAO implements RideDAO {
       data.acceptedAt = new Date(databaseRide.acceptedAt);
     if (databaseRide.driver_id) data.driverId = databaseRide.driver_id;
 
-    return data as Ride;
+    return Ride.restore(data as RideProperties);
   }
 }

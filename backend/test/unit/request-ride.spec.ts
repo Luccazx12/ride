@@ -1,6 +1,6 @@
 import { RideDAO } from "../../src/DAO/ride-dao";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
-import { Ride } from "../../src/dtos/ride";
+import { Ride } from "../../src/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetRide } from "../../src/get-ride";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
@@ -10,6 +10,7 @@ import { RequestRideInputBuilder } from "../builders/request-ride-input-builder"
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
+import { GetRideOutput } from "../../src/dtos/ride";
 
 interface Subject {
   requestRide: RequestRide;
@@ -46,7 +47,7 @@ describe("RequestRide", () => {
     // then
     expect(requestRideOutput.rideId).toBeDefined();
     const getRide = new GetRide(rideDAO);
-    const ride = (await getRide.execute(requestRideOutput.rideId)) as Ride;
+    const ride = (await getRide.execute(requestRideOutput.rideId)) as GetRideOutput;
     expect(ride.passengerId).toEqual(signupOutput.accountId);
     expect(ride.status).toEqual("requested");
   });

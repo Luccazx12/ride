@@ -59,7 +59,10 @@ describe("SqlRideDAO (integration)", () => {
       await dao.save(secondRide);
 
       // when
-      const rides = await dao.listByPassengerId(firstRide.passengerId, firstRide.status);
+      const rides = await dao.listByPassengerId(
+        firstRide.passengerId,
+        firstRide.status
+      );
 
       // then
       const expectedPersistedRides = [firstRide, secondRide];
@@ -72,7 +75,10 @@ describe("SqlRideDAO (integration)", () => {
       const dao = new SqlRideDAO();
 
       // when
-      const rides = await dao.listByPassengerId(faker.string.uuid(), RideStatus.accepted);
+      const rides = await dao.listByPassengerId(
+        faker.string.uuid(),
+        RideStatus.accepted
+      );
 
       // then
       expect(rides.length === 0).toBeTruthy();

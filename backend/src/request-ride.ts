@@ -1,11 +1,9 @@
-import crypto from "crypto";
 import { AccountRepository } from "./DAO/account-repository";
 import { RideDAO } from "./DAO/ride-dao";
 import { RequestRideInput } from "./dtos/request-ride-input";
 import { RequestRideOutput } from "./dtos/request-ride-output";
-import { Coordinates, RideStatus } from "./dtos/ride";
-
-const EARTH_RADIUS_KM = 6371;
+import { RideStatus } from "./dtos/ride";
+import { Ride } from "./ride";
 
 export class RequestRide {
   public constructor(
@@ -28,34 +26,8 @@ export class RequestRide {
     );
     if (passengerRides.length > 0)
       return new Error("Already exists an ride in progress for this passenger");
-    const rideId = crypto.randomUUID();
-    const ride = {
-      ...input,
-      status: RideStatus.requested,
-      requestedAt: new Date(),
-      rideId,
-      distance: this.calculateDistance(input.from, input.to),
-      fare: 0,
-    };
+    const ride = Ride.create({ ...input, fare: 0 });
     await this.rideDAO.save(ride);
-    return { rideId };
-  }
-
-  private calculateDistance(from: Coordinates, to: Coordinates): number {
-    const deltaLat = this.degreesToRadians(to.lat - from.lat);
-    const deltaLon = this.degreesToRadians(to.long - from.long);
-    const a =
-      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-      Math.cos(this.degreesToRadians(from.lat)) *
-        Math.cos(this.degreesToRadians(to.lat)) *
-        Math.sin(deltaLon / 2) *
-        Math.sin(deltaLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = EARTH_RADIUS_KM * c;
-    return distance;
-  }
-
-  private degreesToRadians(degree: number): number {
-    return degree * (Math.PI / 180);
+    return { rideId: ride.rideId };
   }
 }

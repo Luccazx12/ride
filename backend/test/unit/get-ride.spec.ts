@@ -7,9 +7,10 @@ import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
-import { Ride } from "../../src/dtos/ride";
+import { Ride } from "../../src/ride";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
+import { GetRideOutput } from "../../src/dtos/ride";
 
 interface Subject {
   requestRide: RequestRide;
@@ -42,7 +43,7 @@ describe("GetRide", () => {
     )) as RequestRideOutput;
 
     // when
-    const ride = (await getRide.execute(requestRideOutput.rideId)) as Ride;
+    const ride = (await getRide.execute(requestRideOutput.rideId)) as GetRideOutput;
 
     // then
     expect(ride.passengerId).toEqual(signupOutput.accountId);

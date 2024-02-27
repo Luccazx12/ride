@@ -1,10 +1,15 @@
 import { RideDAO } from "./DAO/ride-dao";
-import { Ride } from "./dtos/ride";
+import { GetRideOutput } from "./dtos/ride";
 
 export class GetRide {
   public constructor(private readonly rideDAO: RideDAO) {}
 
-  public async execute(rideId: string): Promise<Ride | null> {
-    return this.rideDAO.getById(rideId);
+  public async execute(rideId: string): Promise<GetRideOutput | null> {
+    const ride = await this.rideDAO.getById(rideId);
+    if (!ride) return null;
+    return {
+      ...ride.getProperties(),
+      distance: ride.distance,
+    };
   }
 }

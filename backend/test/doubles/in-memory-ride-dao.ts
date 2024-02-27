@@ -1,5 +1,5 @@
 import { RideDAO } from "../../src/DAO/ride-dao";
-import { Ride, RideStatus } from "../../src/dtos/ride";
+import { Ride, RideStatus } from "../../src/ride";
 
 export class InMemoryRideDAO implements RideDAO {
   private rides: Ride[] = [];
