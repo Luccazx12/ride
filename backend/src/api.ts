@@ -3,6 +3,9 @@ import { Signup } from "./signup";
 import { SqlAccountDAO } from "./DAO/account-dao";
 import { GetAccount } from "./get-account";
 import { ConsoleMailerGateway } from "./mailer-gateway";
+import { GetRide } from "./get-ride";
+import { SqlRideDAO } from "./DAO/ride-dao";
+
 const app = express();
 app.use(express.json());
 
@@ -28,6 +31,18 @@ app.get("/v1/accounts/:id", async (req, res) => {
   }
 
   res.json(account);
+});
+
+app.get("/v1/ride/:id", async (req, res) => {
+  const getAccount = new GetRide(new SqlRideDAO());
+  const ride = await getAccount.execute(req.params.id);
+
+  if (!ride) {
+    res.status(404).send();
+    return;
+  }
+
+  res.json(ride);
 });
 
 app.listen(3000, () => console.log("listening on port 3000"));

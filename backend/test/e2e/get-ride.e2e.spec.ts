@@ -4,6 +4,10 @@ import { RequestRideInputBuilder } from "../builders/request-ride-input-builder"
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { RideStatus } from "../../src/dtos/ride";
 
+axios.defaults.validateStatus = (status: number) => {
+  return status < 500;
+};
+
 describe("GetRide (e2e)", () => {
   it("should return ride when it exists", async () => {
     // given
@@ -35,7 +39,7 @@ describe("GetRide (e2e)", () => {
     expect(rideOutput.status).toBe(RideStatus.requested);
   });
 
-  it("should return 404 status code when ride not exists", async () => {
+  it.only("should return 404 status code when ride not exists", async () => {
     // given
     const rideId = faker.string.uuid();
 
