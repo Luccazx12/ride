@@ -5,7 +5,7 @@ import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetRide } from "../../src/get-ride";
 import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
-import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
 import { Ride } from "../../src/dtos/ride";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
@@ -18,12 +18,12 @@ interface Subject {
 }
 
 const createSubject = (): Subject => {
-  const accountDAO = new InMemoryAccountDAO();
+  const AccountRepository = new InMemoryAccountRepository();
   const rideDAO = new InMemoryRideDAO();
 
   return {
-    signup: new Signup(accountDAO, new NoopMailerGateway()),
-    requestRide: new RequestRide(accountDAO, rideDAO),
+    signup: new Signup(AccountRepository, new NoopMailerGateway()),
+    requestRide: new RequestRide(AccountRepository, rideDAO),
     getRide: new GetRide(rideDAO),
   };
 };
@@ -42,7 +42,7 @@ describe("GetRide", () => {
     )) as RequestRideOutput;
 
     // when
-    const ride = await getRide.execute(requestRideOutput.rideId) as Ride;
+    const ride = (await getRide.execute(requestRideOutput.rideId)) as Ride;
 
     // then
     expect(ride.passengerId).toEqual(signupOutput.accountId);

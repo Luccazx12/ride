@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { AccountDAO } from "./DAO/account-dao";
+import { AccountRepository } from "./DAO/account-repository";
 import { RideDAO } from "./DAO/ride-dao";
 import { RequestRideInput } from "./dtos/request-ride-input";
 import { RequestRideOutput } from "./dtos/request-ride-output";
@@ -9,14 +9,16 @@ const EARTH_RADIUS_KM = 6371;
 
 export class RequestRide {
   public constructor(
-    private readonly accountDAO: AccountDAO,
+    private readonly AccountRepository: AccountRepository,
     private readonly rideDAO: RideDAO
   ) {}
 
   public async execute(
     input: RequestRideInput
   ): Promise<RequestRideOutput | Error> {
-    const passengerAccount = await this.accountDAO.getById(input.passengerId);
+    const passengerAccount = await this.AccountRepository.getById(
+      input.passengerId
+    );
     if (!passengerAccount) return new Error("Passenger not found");
     if (!passengerAccount.isPassenger)
       return new Error("Account is not a passenger");

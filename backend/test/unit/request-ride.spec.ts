@@ -8,7 +8,7 @@ import { RequestRide } from "../../src/request-ride";
 import { Signup } from "../../src/signup";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideDAO } from "../doubles/in-memory-ride-dao";
 
 interface Subject {
@@ -18,13 +18,13 @@ interface Subject {
 }
 
 const createSubject = (): Subject => {
-  const accountDAO = new InMemoryAccountDAO();
+  const AccountRepository = new InMemoryAccountRepository();
   const rideDAO = new InMemoryRideDAO();
 
   return {
     rideDAO,
-    signup: new Signup(accountDAO, new NoopMailerGateway()),
-    requestRide: new RequestRide(accountDAO, rideDAO),
+    signup: new Signup(AccountRepository, new NoopMailerGateway()),
+    requestRide: new RequestRide(AccountRepository, rideDAO),
   };
 };
 

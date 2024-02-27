@@ -3,21 +3,21 @@ import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetAccount } from "../../src/get-account";
 import { Signup } from "../../src/signup";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { AccountDAO } from "../../src/DAO/account-dao";
-import { InMemoryAccountDAO } from "../doubles/in-memory-account-dao";
+import { AccountRepository } from "../../src/DAO/account-repository";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { NoopMailerGateway } from "../../src/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 interface Subject {
   getAccount: GetAccount;
-  accountDAO: AccountDAO;
+  AccountRepository: AccountRepository;
 }
 
 const createSubject = (): Subject => {
-  const accountDAO = new InMemoryAccountDAO();
+  const AccountRepository = new InMemoryAccountRepository();
   return {
-    accountDAO,
-    getAccount: new GetAccount(accountDAO),
+    AccountRepository,
+    getAccount: new GetAccount(AccountRepository),
   };
 };
 
@@ -25,8 +25,8 @@ describe("GetAccount", () => {
   it("should return account when account is found by id", async () => {
     // given
     const signupInput = new SignUpInputBuilder().build();
-    const { accountDAO, getAccount } = createSubject();
-    const signup = new Signup(accountDAO, new NoopMailerGateway());
+    const { AccountRepository, getAccount } = createSubject();
+    const signup = new Signup(AccountRepository, new NoopMailerGateway());
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
 
     // when
