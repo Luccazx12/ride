@@ -8,7 +8,7 @@ import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
-interface Subject {
+type Subject = {
   getAccount: GetAccount;
   accountRepository: AccountRepository;
 }

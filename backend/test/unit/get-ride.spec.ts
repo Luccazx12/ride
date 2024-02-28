@@ -11,7 +11,7 @@ import { RequestRideInputBuilder } from "../builders/request-ride-input-builder"
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetRideOutput } from "../../src/dtos/ride";
 
-interface Subject {
+type Subject = {
   requestRide: RequestRide;
   signup: Signup;
   getRide: GetRide;
