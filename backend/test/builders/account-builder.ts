@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { cpf } from "cpf-cnpj-validator";
-import { Account, AccountProperties } from "../../src/account";
+import { Account, AccountProperties } from "../../src/domain/entity/account";
 
 export class AccountBuilder {
   private props: AccountProperties = {

@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { SignupOutput } from "../../src/dtos/signup-output";
-import { GetAccount } from "../../src/get-account";
-import { Signup } from "../../src/signup";
+import { GetAccount } from "../../src/application/usecase/get-account";
+import { Signup } from "../../src/application/usecase/signup";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { AccountRepository } from "../../src/repository/account-repository";
+import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
-import { NoopMailerGateway } from "../../src/mailer-gateway";
+import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 interface Subject {

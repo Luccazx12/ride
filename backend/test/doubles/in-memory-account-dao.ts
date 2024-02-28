@@ -1,5 +1,5 @@
-import { AccountRepository } from "../../src/repository/account-repository";
-import { Account } from "../../src/account";
+import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
+import { Account } from "../../src/domain/entity/account";
 
 export class InMemoryAccountRepository implements AccountRepository {
   private accounts: Account[] = [];

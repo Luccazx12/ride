@@ -2,13 +2,13 @@ import { faker } from "@faker-js/faker";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { SignupOutput } from "../../src/dtos/signup-output";
-import { GetRide } from "../../src/get-ride";
-import { RequestRide } from "../../src/request-ride";
-import { Signup } from "../../src/signup";
+import { GetRide } from "../../src/application/usecase/get-ride";
+import { RequestRide } from "../../src/application/usecase/request-ride";
+import { Signup } from "../../src/application/usecase/signup";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
-import { NoopMailerGateway } from "../../src/mailer-gateway";
+import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetRideOutput } from "../../src/dtos/ride";
 
 interface Subject {

@@ -1,5 +1,5 @@
-import { RideRepository } from "../../src/repository/ride-repository";
-import { Ride, RideStatus } from "../../src/ride";
+import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
+import { Ride, RideStatus } from "../../src/domain/entity/ride";
 
 export class InMemoryRideRepository implements RideRepository {
   private rides: Ride[] = [];
