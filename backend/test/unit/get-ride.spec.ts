@@ -15,7 +15,7 @@ type Subject = {
   requestRide: RequestRide;
   signup: Signup;
   getRide: GetRide;
-}
+};
 
 const createSubject = (): Subject => {
   const accountRepository = new InMemoryAccountRepository();

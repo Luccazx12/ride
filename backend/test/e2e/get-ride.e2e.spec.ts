@@ -2,7 +2,7 @@ import axios from "axios";
 import { faker } from "@faker-js/faker";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { RideStatus } from "../../src/dtos/ride";
+import { RideStatus } from "../../src/domain/entity/ride";
 
 axios.defaults.validateStatus = (status: number) => {
   return status < 500;
