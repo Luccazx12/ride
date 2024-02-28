@@ -9,8 +9,8 @@ import { AccountRepository } from "../../src/infrastructure/repository/account-r
 import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
-import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
+import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
 import { AcceptRideInputBuilder } from "../builders/accept-ride-input-builder";
 import { AcceptRide } from "../../src/application/usecase/accept-ride";
 import { RideStatus } from "../../src/domain/entity/ride";
