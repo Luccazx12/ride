@@ -1,7 +1,4 @@
-export enum RideStatus {
-  requested = "requested",
-  accepted = "accepted",
-}
+import { RideStatus } from "../domain/entity/ride";
 
 export interface Coordinates {
   lat: number;

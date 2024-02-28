@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Ride, RideStatus, RideProperties } from "../../src/domain/entity/ride";
+import { Ride, RideProperties } from "../../src/domain/entity/ride";
 
 export class RideBuilder {
   private props: RideProperties = {
@@ -13,13 +13,17 @@ export class RideBuilder {
       lat: faker.location.latitude(),
       long: faker.location.longitude(),
     },
-    status: RideStatus.requested,
     passengerId: faker.string.uuid(),
     requestedAt: new Date(),
   };
 
-  public withStatus(status: RideStatus): this {
-    this.props.status = status;
+  public withDriverId(driverId?: string): this {
+    this.props.driverId = driverId;
+    return this;
+  }
+
+  public withId(rideId: string): this {
+    this.props.rideId = rideId;
     return this;
   }
 

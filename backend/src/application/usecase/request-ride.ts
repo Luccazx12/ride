@@ -2,8 +2,7 @@ import { AccountRepository } from "../../infrastructure/repository/account-repos
 import { RideRepository } from "../../infrastructure/repository/ride-repository";
 import { RequestRideInput } from "../../dtos/request-ride-input";
 import { RequestRideOutput } from "../../dtos/request-ride-output";
-import { RideStatus } from "../../dtos/ride";
-import { Ride } from "../../domain/entity/ride";
+import { Ride, RideStatus } from "../../domain/entity/ride";
 
 export class RequestRide {
   public constructor(

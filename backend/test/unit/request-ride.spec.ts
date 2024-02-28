@@ -17,7 +17,7 @@ type Subject = {
   signup: Signup;
   rideRepository: RideRepository;
   accountRepository: AccountRepository;
-}
+};
 
 const createSubject = (): Subject => {
   const accountRepository = new InMemoryAccountRepository();
@@ -72,7 +72,7 @@ describe("RequestRide", () => {
 
     // then
     expect(requestRideOutput).toEqual([
-      new Error("Already exists an ride in progress for this passenger")
+      new Error("Already exists an ride in progress for this passenger"),
     ]);
   });
 
@@ -101,6 +101,8 @@ describe("RequestRide", () => {
     const requestRideOutput = await requestRide.execute(requestRideInput);
 
     // then
-    expect(requestRideOutput).toEqual([new Error("Account is not a passenger")]);
+    expect(requestRideOutput).toEqual([
+      new Error("Account is not a passenger"),
+    ]);
   });
 });

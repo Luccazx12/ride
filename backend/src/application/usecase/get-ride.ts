@@ -21,7 +21,7 @@ export class GetRide {
       passengerId: rideProperties.passengerId,
       passengerName: passengerAccount.name,
       driverId: rideProperties.driverId,
-      status: rideProperties.status,
+      status: ride.status,
       fare: rideProperties.fare,
       distance: ride.distance,
       from: rideProperties.from,

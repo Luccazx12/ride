@@ -3,6 +3,7 @@ import crypto from "crypto";
 export enum RideStatus {
   requested = "requested",
   accepted = "accepted",
+  inProgress = "in_progress",
 }
 
 export interface Coordinates {
@@ -14,7 +15,6 @@ export type RideProperties = {
   rideId: string;
   passengerId: string;
   driverId?: string;
-  status: RideStatus;
   fare: number;
   from: Coordinates;
   to: Coordinates;
@@ -34,12 +34,10 @@ export class Ride {
   public static create(
     properties: Omit<RideProperties, "status" | "rideId" | "requestedAt">
   ): Ride {
-    const status = RideStatus.requested;
     const id = crypto.randomUUID();
     return new Ride({
       ...properties,
       rideId: id,
-      status,
       requestedAt: new Date(),
     });
   }
@@ -56,8 +54,22 @@ export class Ride {
     return this.properties.rideId;
   }
 
+  public get driverId(): string | undefined {
+    return this.properties.driverId;
+  }
+
   public get status(): RideStatus {
-    return this.properties.status;
+    if (!this.properties.acceptedAt) return RideStatus.requested;
+    return RideStatus.accepted;
+  }
+
+  public isRequested(): boolean {
+    return this.status === RideStatus.requested;
+  }
+
+  public accept(driverId: string): void {
+    this.properties.driverId = driverId;
+    this.properties.acceptedAt = new Date();
   }
 
   private calculateDistance(from: Coordinates, to: Coordinates): number {
