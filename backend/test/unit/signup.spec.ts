@@ -9,11 +9,11 @@ import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
-interface Fixture {
+type Fixture = {
   signupInput: SignupInput;
 }
 
-interface Subject {
+type Subject = {
   signup: Signup;
   accountRepository: AccountRepository;
 }

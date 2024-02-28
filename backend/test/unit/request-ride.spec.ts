@@ -12,7 +12,7 @@ import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
 import { GetRideOutput } from "../../src/dtos/ride";
 import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
 
-interface Subject {
+type Subject = {
   requestRide: RequestRide;
   signup: Signup;
   rideRepository: RideRepository;
