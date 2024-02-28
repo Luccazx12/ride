@@ -1,5 +1,5 @@
-import { Ride, RideProperties, RideStatus } from "../ride";
-import { DatabaseConnection } from "../database-connection";
+import { Ride, RideProperties, RideStatus } from "../../domain/entity/ride";
+import { DatabaseConnection } from "../../infrastructure/database/database-connection";
 
 export interface RideRepository {
   listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;

@@ -1,5 +1,5 @@
-import { AccountRepository } from "./repository/account-repository";
-import { GetAccountOutput } from "./dtos/get-account-output";
+import { AccountRepository } from "../../infrastructure/repository/account-repository";
+import { GetAccountOutput } from "../../dtos/get-account-output";
 
 export class GetAccount {
   public constructor(private readonly accountRepository: AccountRepository) {}

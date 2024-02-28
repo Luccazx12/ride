@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Ride, RideStatus, RideProperties } from "../../src/ride";
+import { Ride, RideStatus, RideProperties } from "../../src/domain/entity/ride";
 
 export class RideBuilder {
   private props: RideProperties = {

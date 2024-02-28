@@ -1,5 +1,5 @@
-import { Account } from "../account";
-import { DatabaseConnection } from "../database-connection";
+import { Account } from "../../domain/entity/account";
+import { DatabaseConnection } from "../../infrastructure/database/database-connection";
 
 export interface AccountRepository {
   getByEmail(email: string): Promise<Account | null>;

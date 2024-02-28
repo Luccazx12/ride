@@ -1,9 +1,9 @@
-import { AccountRepository } from "./repository/account-repository";
-import { RideRepository } from "./repository/ride-repository";
-import { RequestRideInput } from "./dtos/request-ride-input";
-import { RequestRideOutput } from "./dtos/request-ride-output";
-import { RideStatus } from "./dtos/ride";
-import { Ride } from "./ride";
+import { AccountRepository } from "../../infrastructure/repository/account-repository";
+import { RideRepository } from "../../infrastructure/repository/ride-repository";
+import { RequestRideInput } from "../../dtos/request-ride-input";
+import { RequestRideOutput } from "../../dtos/request-ride-output";
+import { RideStatus } from "../../dtos/ride";
+import { Ride } from "../../domain/entity/ride";
 
 export class RequestRide {
   public constructor(
