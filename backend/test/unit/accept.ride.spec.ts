@@ -6,7 +6,7 @@ import { GetRideOutput } from "../../src/dtos/ride";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
-import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
+import { RideRepository } from '../../src/infrastructure/repository/ride-repository';
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
@@ -14,6 +14,7 @@ import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
 import { AcceptRideInputBuilder } from "../builders/accept-ride-input-builder";
 import { AcceptRide } from "../../src/application/usecase/accept-ride";
 import { RideStatus } from "../../src/domain/entity/ride";
+import { StartRide } from "../../src/application/usecase/start-ride";
 
 type Subject = {
   requestRide: RequestRide;
@@ -177,7 +178,7 @@ describe("AcceptRide", () => {
     expect(Array.isArray(output) && output[0] instanceof Error).toBeTruthy();
   });
 
-  it.skip("should return error when driver already has an in_progress ride", async () => {
+  it("should return error when driver already has an in_progress ride", async () => {
     // given
     const signupPassengerInput = new SignUpInputBuilder()
       .withIsPassenger(true)
@@ -188,7 +189,7 @@ describe("AcceptRide", () => {
     const signupDriverInput = new SignUpInputBuilder()
       .withIsDriver(true)
       .build();
-    const { requestRide, signup, acceptRide } = createSubject();
+    const { requestRide, signup, acceptRide, rideRepository } = createSubject();
     const signupPassengerOutput = (await signup.execute(
       signupPassengerInput
     )) as SignupOutput;
@@ -219,7 +220,8 @@ describe("AcceptRide", () => {
       .withDriverId(signupDriverOutput.accountId)
       .build();
     await acceptRide.execute(secondAcceptRideInput);
-    // await startRide.execute(secondRequestRideOutput.rideId);
+    const startRide = new StartRide(rideRepository);
+    await startRide.execute(secondRequestRideOutput.rideId);
 
     // when
     const output = await acceptRide.execute(acceptRideInput);

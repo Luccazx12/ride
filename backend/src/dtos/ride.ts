@@ -17,4 +17,5 @@ export type GetRideOutput = {
   to: Coordinates;
   requestedAt: Date;
   acceptedAt?: Date;
+  startedAt?: Date;
 }
