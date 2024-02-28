@@ -21,10 +21,10 @@ export class MainController {
         const signupOutput = await this.signup.execute(req.body);
         if (Array.isArray(signupOutput) && signupOutput[0] instanceof Error) {
           return {
+            status: 422,
             data: signupOutput.map((e) => ({
               message: e.message,
             })),
-            status: 422,
           };
         }
         return { status: 200, data: signupOutput };
@@ -56,8 +56,16 @@ export class MainController {
       "/v1/request_ride",
       async (req: HttpRequest) => {
         const requestRideOutput = await this.requestRide.execute(req.body);
-        if (requestRideOutput instanceof Error) {
-          return { status: 422, data: requestRideOutput.message };
+        if (
+          Array.isArray(requestRideOutput) &&
+          requestRideOutput[0] instanceof Error
+        ) {
+          return {
+            status: 422,
+            data: requestRideOutput.map((e) => ({
+              message: e.message,
+            })),
+          };
         }
         return { status: 200, data: requestRideOutput };
       }
