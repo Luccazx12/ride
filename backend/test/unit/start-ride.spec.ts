@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { AcceptRide } from "../../src/application/usecase/accept-ride";
 import { GetRide } from "../../src/application/usecase/get-ride";
 import { RequestRide } from "../../src/application/usecase/request-ride";
@@ -14,10 +15,12 @@ import { RequestRideInputBuilder } from "../builders/request-ride-input-builder"
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
+import { StartRide } from "../../src/application/usecase/start-ride";
 
 type Subject = {
   requestRide: RequestRide;
   acceptRide: AcceptRide;
+  startRide: StartRide;
   signup: Signup;
   rideRepository: RideRepository;
   accountRepository: AccountRepository;
@@ -33,6 +36,7 @@ const createSubject = (): Subject => {
     signup: new Signup(accountRepository, new NoopMailerGateway()),
     requestRide: new RequestRide(accountRepository, rideRepository),
     acceptRide: new AcceptRide(accountRepository, rideRepository),
+    startRide: new StartRide(rideRepository),
   };
 };
 
@@ -51,6 +55,7 @@ describe("StartRide", () => {
       rideRepository,
       accountRepository,
       acceptRide,
+      startRide,
     } = createSubject();
     const signupPassengerOutput = (await signup.execute(
       signupPassengerInput
@@ -94,6 +99,7 @@ describe("StartRide", () => {
       signup,
       rideRepository,
       accountRepository,
+      startRide,
     } = createSubject();
     const signupPassengerOutput = (await signup.execute(
       signupPassengerInput
@@ -116,6 +122,18 @@ describe("StartRide", () => {
       requestRideOutput.rideId
     )) as GetRideOutput;
     expect(getRideOutput.startedAt).not.toBeDefined();
-    expect(getRideOutput.status).toEqual(RideStatus.accepted);
+    expect(getRideOutput.status).toEqual(RideStatus.requested);
+  });
+
+  it("should return an error when ride is not found", async () => {
+    // given
+    const rideId = faker.string.uuid();
+    const { startRide } = createSubject();
+
+    // when
+    const output = await startRide.execute(rideId);
+
+    // then
+    expect(Array.isArray(output) && output[0] instanceof Error).toBeTruthy();
   });
 });

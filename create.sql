@@ -12,7 +12,7 @@ create table ride.account (
 	is_driver boolean not null default false
 );
 
-create table cccat15.ride (
+create table ride.ride (
 	ride_id uuid,
 	passenger_id uuid,
 	driver_id uuid,
@@ -25,5 +25,5 @@ create table cccat15.ride (
 	to_long numeric,
 	requested_at timestamp,
 	accepted_at timestamp,
-	confirmed_at timestamp
+	started_at timestamp
 );

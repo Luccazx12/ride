@@ -20,6 +20,7 @@ export type RideProperties = {
   to: Coordinates;
   requestedAt: Date;
   acceptedAt?: Date;
+  startedAt?: Date;
 };
 
 export class Ride {
@@ -60,7 +61,16 @@ export class Ride {
 
   public get status(): RideStatus {
     if (!this.properties.acceptedAt) return RideStatus.requested;
-    return RideStatus.accepted;
+    if (!this.properties.startedAt) return RideStatus.accepted;
+    return RideStatus.inProgress;
+  }
+
+  public start(): void {
+    this.properties.startedAt = new Date();
+  }
+
+  public isAccepted(): boolean {
+    return this.status === RideStatus.accepted;
   }
 
   public isRequested(): boolean {
