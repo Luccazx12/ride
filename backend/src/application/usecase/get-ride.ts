@@ -1,6 +1,6 @@
-import { RideRepository } from "./repository/ride-repository";
-import { GetRideOutput } from "./dtos/ride";
-import { AccountRepository } from "./repository/account-repository";
+import { RideRepository } from "../../infrastructure/repository/ride-repository";
+import { GetRideOutput } from "../../dtos/ride";
+import { AccountRepository } from "../../infrastructure/repository/account-repository";
 
 export class GetRide {
   public constructor(

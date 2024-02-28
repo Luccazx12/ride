@@ -1,8 +1,8 @@
-import { GetAccount } from "./get-account";
-import { GetRide } from "./get-ride";
+import { GetAccount } from "../../application/usecase/get-account";
+import { GetRide } from "../../application/usecase/get-ride";
 import { HttpMethod, HttpRequest, HttpServer } from "./http-server";
-import { RequestRide } from "./request-ride";
-import { Signup } from "./signup";
+import { RequestRide } from "../../application/usecase/request-ride";
+import { Signup } from "../../application/usecase/signup";
 
 export class MainController {
   public constructor(

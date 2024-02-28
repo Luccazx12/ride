@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { isValidCpf } from "./cpf-validation";
+import { isValidCpf } from "../cpf-validation";
 
 export type AccountProperties = {
   accountId: string;

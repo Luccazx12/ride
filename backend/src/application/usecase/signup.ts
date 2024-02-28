@@ -1,8 +1,8 @@
-import { SignupOutput } from "./dtos/signup-output";
-import { AccountRepository } from "./repository/account-repository";
-import { SignupInput } from "./dtos/signup-input";
-import { MailerGateway } from "./mailer-gateway";
-import { Account } from "./account";
+import { SignupOutput } from "../../dtos/signup-output";
+import { AccountRepository } from "../../infrastructure/repository/account-repository";
+import { SignupInput } from "../../dtos/signup-input";
+import { MailerGateway } from "../../infrastructure/gateway/mailer-gateway";
+import { Account } from "../../domain/entity/account";
 
 export class Signup {
   public constructor(

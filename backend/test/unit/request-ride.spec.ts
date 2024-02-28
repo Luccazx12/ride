@@ -1,16 +1,16 @@
-import { RideRepository } from "../../src/repository/ride-repository";
+import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { SignupOutput } from "../../src/dtos/signup-output";
-import { GetRide } from "../../src/get-ride";
-import { NoopMailerGateway } from "../../src/mailer-gateway";
-import { RequestRide } from "../../src/request-ride";
-import { Signup } from "../../src/signup";
+import { GetRide } from "../../src/application/usecase/get-ride";
+import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
+import { RequestRide } from "../../src/application/usecase/request-ride";
+import { Signup } from "../../src/application/usecase/signup";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
 import { GetRideOutput } from "../../src/dtos/ride";
-import { AccountRepository } from "../../src/repository/account-repository";
+import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
 
 interface Subject {
   requestRide: RequestRide;
@@ -35,7 +35,8 @@ describe("RequestRide", () => {
   it("should request ride", async () => {
     // given
     const signupInput = new SignUpInputBuilder().withIsPassenger(true).build();
-    const { requestRide, signup, rideRepository, accountRepository } = createSubject();
+    const { requestRide, signup, rideRepository, accountRepository } =
+      createSubject();
     const signupOutput = (await signup.execute(signupInput)) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
       .withPassengerId(signupOutput.accountId)
