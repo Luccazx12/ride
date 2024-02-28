@@ -13,6 +13,15 @@ export class InMemoryRideRepository implements RideRepository {
     );
   }
 
+  public async listByDriverId(
+    driverId: string,
+    status: RideStatus[]
+  ): Promise<Ride[]> {
+    return this.rides.filter(
+      (ride) => ride.driverId === driverId && status.includes(ride.status)
+    );
+  }
+
   public async getById(id: string): Promise<Ride | null> {
     const ride = this.rides.find((ride) => ride.rideId === id);
     if (!ride) return null;
@@ -21,5 +30,14 @@ export class InMemoryRideRepository implements RideRepository {
 
   public async save(account: Ride): Promise<void> {
     this.rides.push(account);
+  }
+
+  public async update(ride: Ride): Promise<void> {
+    const rideIndex = this.rides.findIndex(
+      (value) => value.rideId === ride.rideId
+    );
+    if (rideIndex > 0) {
+      this.rides[rideIndex] = ride;
+    }
   }
 }
