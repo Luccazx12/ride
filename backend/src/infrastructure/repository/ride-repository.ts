@@ -3,8 +3,10 @@ import { DatabaseConnection } from "../../infrastructure/database/database-conne
 
 export interface RideRepository {
   listByPassengerId(passengerId: string, status: RideStatus): Promise<Ride[]>;
+  listByDriverId(driverId: string, statuses: RideStatus[]): Promise<Ride[]>;
   getById(id: string): Promise<Ride | null>;
   save(ride: Ride): Promise<void>;
+  update(ride: Ride): Promise<void>;
 }
 
 export class SqlRideRepository implements RideRepository {
@@ -17,6 +19,17 @@ export class SqlRideRepository implements RideRepository {
     const rides = await this.connection.query(
       "select * from ride.ride where passenger_id = $1 and status = $2",
       [passengerId, status]
+    );
+    return rides.map((ride: any) => this.mapToRide(ride));
+  }
+
+  public async listByDriverId(
+    driverId: string,
+    status: RideStatus[]
+  ): Promise<Ride[]> {
+    const rides = await this.connection.query(
+      "select * from ride.ride where driver_id = $1 and status in ($2)",
+      [driverId, status.join(",")]
     );
     return rides.map((ride: any) => this.mapToRide(ride));
   }
@@ -38,7 +51,28 @@ export class SqlRideRepository implements RideRepository {
         rideProperties.rideId,
         rideProperties.passengerId,
         rideProperties.driverId,
-        rideProperties.status,
+        ride.status,
+        rideProperties.fare,
+        ride.distance,
+        rideProperties.from.lat,
+        rideProperties.from.long,
+        rideProperties.to.lat,
+        rideProperties.to.long,
+        rideProperties.requestedAt,
+        rideProperties.acceptedAt,
+      ]
+    );
+  }
+
+  public async update(ride: Ride): Promise<void> {
+    const rideProperties = ride.getProperties();
+    await this.connection.query(
+      "UPDATE ride.ride SET passenger_id = $2, driver_id = $3, status = $4, fare = $5, distance = $6, from_lat = $7, from_long = $8, to_lat = $9, to_long = $10, requested_at = $11, accepted_at = $12 WHERE ride_id = $1;",
+      [
+        rideProperties.rideId,
+        rideProperties.passengerId,
+        rideProperties.driverId,
+        ride.status,
         rideProperties.fare,
         ride.distance,
         rideProperties.from.lat,
@@ -55,7 +89,6 @@ export class SqlRideRepository implements RideRepository {
     const data: Partial<RideProperties> = {
       rideId: databaseRide.ride_id,
       passengerId: databaseRide.passenger_id,
-      status: databaseRide.status,
       fare: Number(databaseRide.fare),
       from: {
         long: Number(databaseRide.from_long),
