@@ -2,13 +2,21 @@ import { faker } from "@faker-js/faker";
 import { SqlRideRepository } from "../../src/repository/ride-repository";
 import { RideBuilder } from "../builders/ride-builder";
 import { RideStatus } from "../../src/dtos/ride";
-import { PgPromiseAdapter } from "../../src/database-connection";
+import { DatabaseConnection, PgPromiseAdapter } from "../../src/database-connection";
 
 describe("SqlRideRepository (integration)", () => {
+  let databaseConnection: DatabaseConnection;
+
+  beforeAll(() => {
+    databaseConnection = new PgPromiseAdapter();
+  });
+
+  afterAll(() => databaseConnection.close());
+
   describe("save", () => {
     it("should create ride", async () => {
       // given
-      const dao = new SqlRideRepository(new PgPromiseAdapter());
+      const dao = new SqlRideRepository(databaseConnection);
       const ride = new RideBuilder().build();
 
       // when
@@ -23,7 +31,7 @@ describe("SqlRideRepository (integration)", () => {
   describe("getById", () => {
     it("should get ride by id", async () => {
       // given
-      const dao = new SqlRideRepository(new PgPromiseAdapter());
+      const dao = new SqlRideRepository(databaseConnection);
       const ride = new RideBuilder().build();
       await dao.save(ride);
 
@@ -37,7 +45,7 @@ describe("SqlRideRepository (integration)", () => {
 
     it("should return null when ride is not found by id", async () => {
       // given
-      const dao = new SqlRideRepository(new PgPromiseAdapter());
+      const dao = new SqlRideRepository(databaseConnection);
 
       // when
       const foundRide = await dao.getById(faker.string.uuid());
@@ -50,7 +58,7 @@ describe("SqlRideRepository (integration)", () => {
   describe("listByPassengerId", () => {
     it("should list rides by passengerId and status", async () => {
       // given
-      const dao = new SqlRideRepository(new PgPromiseAdapter());
+      const dao = new SqlRideRepository(databaseConnection);
       const firstRide = new RideBuilder().build();
       const secondRide = new RideBuilder()
         .withPassengerId(firstRide.passengerId)
@@ -73,7 +81,7 @@ describe("SqlRideRepository (integration)", () => {
 
     it("should return empty array when rides is not found", async () => {
       // given
-      const dao = new SqlRideRepository(new PgPromiseAdapter());
+      const dao = new SqlRideRepository(databaseConnection);
 
       // when
       const rides = await dao.listByPassengerId(
