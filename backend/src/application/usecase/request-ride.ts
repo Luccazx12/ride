@@ -13,20 +13,24 @@ export class RequestRide {
 
   public async execute(
     input: RequestRideInput
-  ): Promise<RequestRideOutput | Error> {
+  ): Promise<RequestRideOutput | Error[]> {
     const passengerAccount = await this.accountRepository.getById(
       input.passengerId
     );
-    if (!passengerAccount) return new Error("Passenger not found");
+    if (!passengerAccount) return [new Error("Passenger not found")];
     if (!passengerAccount.isPassenger)
-      return new Error("Account is not a passenger");
+      return [new Error("Account is not a passenger")];
     const passengerRides = await this.rideRepository.listByPassengerId(
       passengerAccount.accountId,
       RideStatus.requested
     );
     if (passengerRides.length > 0)
-      return new Error("Already exists an ride in progress for this passenger");
+      return [
+        new Error("Already exists an ride in progress for this passenger"),
+      ];
     const ride = Ride.create({ ...input, fare: 0 });
+    const rideErrors = ride.getErrors();
+    if (rideErrors.length > 0) return rideErrors;
     await this.rideRepository.save(ride);
     return { rideId: ride.rideId };
   }

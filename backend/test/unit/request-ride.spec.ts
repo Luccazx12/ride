@@ -71,9 +71,9 @@ describe("RequestRide", () => {
     const requestRideOutput = await requestRide.execute(requestRideInput);
 
     // then
-    expect(requestRideOutput).toEqual(
+    expect(requestRideOutput).toEqual([
       new Error("Already exists an ride in progress for this passenger")
-    );
+    ]);
   });
 
   it("should return error when passenger is not found", async () => {
@@ -85,7 +85,7 @@ describe("RequestRide", () => {
     const requestRideOutput = await requestRide.execute(requestRideInput);
 
     // then
-    expect(requestRideOutput).toEqual(new Error("Passenger not found"));
+    expect(requestRideOutput).toEqual([new Error("Passenger not found")]);
   });
 
   it("should return error when account is not passenger", async () => {
@@ -101,6 +101,6 @@ describe("RequestRide", () => {
     const requestRideOutput = await requestRide.execute(requestRideInput);
 
     // then
-    expect(requestRideOutput).toEqual(new Error("Account is not a passenger"));
+    expect(requestRideOutput).toEqual([new Error("Account is not a passenger")]);
   });
 });

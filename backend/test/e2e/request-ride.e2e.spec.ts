@@ -42,7 +42,7 @@ describe("RequestRide (e2e)", () => {
     // then
     expect(requestRideResponse.status).toEqual(422);
     const requestRideOutput = requestRideResponse.data;
-    expect(requestRideOutput).toEqual("Passenger not found");
+    expect(requestRideOutput).toEqual([{ message: "Passenger not found" }]);
   });
 
   it("should not request ride when account is not a passenger", async () => {
@@ -66,7 +66,9 @@ describe("RequestRide (e2e)", () => {
     // then
     expect(requestRideResponse.status).toEqual(422);
     const requestRideOutput = requestRideResponse.data;
-    expect(requestRideOutput).toEqual("Account is not a passenger");
+    expect(requestRideOutput).toEqual([
+      { message: "Account is not a passenger" },
+    ]);
   });
 
   it("should not request ride when passenger already has an active ride", async () => {
@@ -91,8 +93,8 @@ describe("RequestRide (e2e)", () => {
     // then
     expect(requestRideResponse.status).toEqual(422);
     const requestRideOutput = requestRideResponse.data;
-    expect(requestRideOutput).toEqual(
-      "Already exists an ride in progress for this passenger"
-    );
+    expect(requestRideOutput).toEqual([
+      { message: "Already exists an ride in progress for this passenger" },
+    ]);
   });
 });
