@@ -5,18 +5,18 @@ import { SignupOutput } from "../../src/dtos/signup-output";
 import { GetAccount } from "../../src/application/usecase/get-account";
 import { Signup } from "../../src/application/usecase/signup";
 import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
-import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { GetAccountOutput } from "../../src/dtos/get-account-output";
 
 type Fixture = {
   signupInput: SignupInput;
-}
+};
 
 type Subject = {
   signup: Signup;
   accountRepository: AccountRepository;
-}
+};
 
 const createFixture = (): Fixture => {
   return {

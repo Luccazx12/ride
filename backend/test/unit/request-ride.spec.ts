@@ -7,8 +7,8 @@ import { RequestRide } from "../../src/application/usecase/request-ride";
 import { Signup } from "../../src/application/usecase/signup";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { InMemoryAccountRepository } from "../doubles/in-memory-account-dao";
-import { InMemoryRideRepository } from "../doubles/in-memory-ride-dao";
+import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
+import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
 import { GetRideOutput } from "../../src/dtos/ride";
 import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
 
