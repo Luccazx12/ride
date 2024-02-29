@@ -69,6 +69,10 @@ export class Ride {
     this.properties.startedAt = new Date();
   }
 
+  public isStarted(): boolean {
+    return this.status === RideStatus.inProgress;
+  }
+
   public isAccepted(): boolean {
     return this.status === RideStatus.accepted;
   }
