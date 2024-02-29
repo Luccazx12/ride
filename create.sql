@@ -27,3 +27,11 @@ create table ride.ride (
 	accepted_at timestamp,
 	started_at timestamp
 );
+
+create table ride.position (
+	position_id uuid,
+	ride_id uuid,
+	lat numeric,
+	long numeric,
+	date timestamp
+);
