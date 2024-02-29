@@ -2,14 +2,16 @@ import { AcceptRide } from "../../src/application/usecase/accept-ride";
 import { RequestRide } from "../../src/application/usecase/request-ride";
 import { Signup } from "../../src/application/usecase/signup";
 import { StartRide } from "../../src/application/usecase/start-ride";
+import { UpdatePosition } from "../../src/application/usecase/update-position";
 import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
-import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
-import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
+import { PositionRepository } from "../../src/infrastructure/repository/position-repository";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
+import { UpdatePositionInputBuilder } from "../builders/update-position-input-builder";
 import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
+import { InMemoryPositionRepository } from "../doubles/in-memory-position-repository";
 import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
 
 type Subject = {
@@ -32,7 +34,7 @@ const createSubject = (): Subject => {
     requestRide: new RequestRide(accountRepository, rideRepository),
     acceptRide: new AcceptRide(accountRepository, rideRepository),
     startRide: new StartRide(rideRepository),
-    updatePosition: new UpdatePosition(positionRepository),
+    updatePosition: new UpdatePosition(positionRepository, rideRepository),
   };
 };
 
@@ -70,8 +72,8 @@ describe("UpdatePosition", () => {
     // then
     const getPosition = GetPosition(positionRepository);
     const getPositionOutput = getPosition.execute(requestRideOutput.rideId);
-    expect(getPositionOutput.long).toEqual(updatePositionInput.long);
-    expect(getPositionOutput.lat).toEqual(updatePositionInput.lat);
+    expect(getPositionOutput.long).toEqual(updatePositionInput.position.long);
+    expect(getPositionOutput.lat).toEqual(updatePositionInput.position.lat);
   });
 
   it("should return an error when the ride has not been started yet", async () => {
