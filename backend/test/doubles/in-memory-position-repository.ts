@@ -12,6 +12,10 @@ export class InMemoryPositionRepository implements PositionRepository {
     return position;
   }
 
+  public async listByRideId(rideId: string): Promise<Position[]> {
+    return this.positions.filter((position) => position.rideId === rideId);
+  }
+
   public async save(position: Position): Promise<void> {
     this.positions.push(position);
   }

@@ -4,6 +4,7 @@ import { DatabaseConnection } from "../../infrastructure/database/database-conne
 export interface PositionRepository {
   save(position: Position): Promise<void>;
   getById(positionId: string): Promise<Position | null>;
+  listByRideId(rideId: string): Promise<Position[]>;
 }
 
 export class SqlPositionRepository implements PositionRepository {
