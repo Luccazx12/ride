@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { Coordinates } from "./ride";
 
 interface PositionProperties {

@@ -1,4 +1,5 @@
 import { AcceptRide } from "../../src/application/usecase/accept-ride";
+import { GetPositions } from "../../src/application/usecase/get-positions";
 import { RequestRide } from "../../src/application/usecase/request-ride";
 import { Signup } from "../../src/application/usecase/signup";
 import { StartRide } from "../../src/application/usecase/start-ride";
@@ -7,6 +8,7 @@ import { RequestRideOutput } from "../../src/dtos/request-ride-output";
 import { SignupOutput } from "../../src/dtos/signup-output";
 import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
 import { PositionRepository } from "../../src/infrastructure/repository/position-repository";
+import { AcceptRideInputBuilder } from "../builders/accept-ride-input-builder";
 import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../builders/signup-input-builder";
 import { UpdatePositionInputBuilder } from "../builders/update-position-input-builder";
@@ -40,40 +42,55 @@ const createSubject = (): Subject => {
 
 describe("UpdatePosition", () => {
   it("should update the ride position", async () => {
-    // given
     const signupPassengerInput = new SignUpInputBuilder()
       .withIsPassenger(true)
+      .build();
+    const signupDriverInput = new SignUpInputBuilder()
+      .withIsDriver(true)
       .build();
     const {
       requestRide,
       signup,
+      positionRepository,
+      acceptRide,
       startRide,
       updatePosition,
-      positionRepository,
     } = createSubject();
     const signupPassengerOutput = (await signup.execute(
       signupPassengerInput
     )) as SignupOutput;
-
+    const signupDriverOutput = (await signup.execute(
+      signupDriverInput
+    )) as SignupOutput;
     const requestRideInput = new RequestRideInputBuilder()
       .withPassengerId(signupPassengerOutput.accountId)
       .build();
     const requestRideOutput = (await requestRide.execute(
       requestRideInput
     )) as RequestRideOutput;
-    await startRide.execute(requestRideOutput.rideId);
+    const acceptRideInput = new AcceptRideInputBuilder()
+      .withRideId(requestRideOutput.rideId)
+      .withDriverId(signupDriverOutput.accountId)
+      .build();
+    await acceptRide.execute(acceptRideInput);
+    await startRide.execute(acceptRideInput.rideId);
     const updatePositionInput = new UpdatePositionInputBuilder()
       .withRideId(requestRideOutput.rideId)
       .build();
 
     // when
-    await updatePosition.execute(updatePositionInput);
+    const output = await updatePosition.execute(updatePositionInput);
 
     // then
-    const getPosition = GetPosition(positionRepository);
-    const getPositionOutput = getPosition.execute(requestRideOutput.rideId);
-    expect(getPositionOutput.long).toEqual(updatePositionInput.position.long);
-    expect(getPositionOutput.lat).toEqual(updatePositionInput.position.lat);
+    expect(Array.isArray(output) && output[0] instanceof Error).toBeFalsy();
+    const getPosition = new GetPositions(positionRepository);
+    const getPositionOutput = await getPosition.execute(
+      requestRideOutput.rideId
+    );
+    expect(getPositionOutput[0].long).toEqual(
+      updatePositionInput.position.long
+    );
+    expect(getPositionOutput[0].lat).toEqual(updatePositionInput.position.lat);
   });
 
   it("should return an error when the ride has not been started yet", async () => {
@@ -81,11 +98,7 @@ describe("UpdatePosition", () => {
     const signupPassengerInput = new SignUpInputBuilder()
       .withIsPassenger(true)
       .build();
-    const {
-      requestRide,
-      signup,
-      updatePosition,
-    } = createSubject();
+    const { requestRide, signup, updatePosition } = createSubject();
     const signupPassengerOutput = (await signup.execute(
       signupPassengerInput
     )) as SignupOutput;
