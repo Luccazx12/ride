@@ -1,9 +1,9 @@
 import {
   DatabaseConnection,
   PgPromiseAdapter,
-} from "../../src/infrastructure/database/database-connection";
-import { PositionBuilder } from "../builders/position-builder";
-import { SqlPositionRepository } from "../../src/infrastructure/repository/position-repository";
+} from "../../../src/infrastructure/database/database-connection";
+import { PositionBuilder } from "../../builders/position-builder";
+import { SqlPositionRepository } from "../../../src/infrastructure/repository/position-repository";
 import { faker } from "@faker-js/faker";
 
 describe("SqlPositionRepository (integration)", () => {

@@ -1,21 +1,21 @@
 import { faker } from "@faker-js/faker";
-import { AcceptRide } from "../../src/application/usecase/accept-ride";
-import { GetRide } from "../../src/application/usecase/get-ride";
-import { RequestRide } from "../../src/application/usecase/request-ride";
-import { Signup } from "../../src/application/usecase/signup";
-import { RideStatus } from "../../src/domain/entity/ride";
-import { RequestRideOutput } from "../../src/dtos/request-ride-output";
-import { GetRideOutput } from "../../src/dtos/ride";
-import { SignupOutput } from "../../src/dtos/signup-output";
-import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
-import { AccountRepository } from "../../src/infrastructure/repository/account-repository";
-import { RideRepository } from "../../src/infrastructure/repository/ride-repository";
-import { AcceptRideInputBuilder } from "../builders/accept-ride-input-builder";
-import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
-import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
-import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
-import { StartRide } from "../../src/application/usecase/start-ride";
+import { AcceptRide } from "../../../src/application/usecase/accept-ride";
+import { GetRide } from "../../../src/application/usecase/get-ride";
+import { RequestRide } from "../../../src/application/usecase/request-ride";
+import { Signup } from "../../../src/application/usecase/signup";
+import { RideStatus } from "../../../src/domain/entity/ride";
+import { RequestRideOutput } from "../../../src/dtos/request-ride-output";
+import { GetRideOutput } from "../../../src/dtos/ride";
+import { SignupOutput } from "../../../src/dtos/signup-output";
+import { NoopMailerGateway } from "../../../src/infrastructure/gateway/mailer-gateway";
+import { AccountRepository } from "../../../src/infrastructure/repository/account-repository";
+import { RideRepository } from "../../../src/infrastructure/repository/ride-repository";
+import { AcceptRideInputBuilder } from "../../builders/accept-ride-input-builder";
+import { RequestRideInputBuilder } from "../../builders/request-ride-input-builder";
+import { SignUpInputBuilder } from "../../builders/signup-input-builder";
+import { InMemoryAccountRepository } from "../../doubles/in-memory-account-repository";
+import { InMemoryRideRepository } from "../../doubles/in-memory-ride-repository";
+import { StartRide } from "../../../src/application/usecase/start-ride";
 
 type Subject = {
   requestRide: RequestRide;

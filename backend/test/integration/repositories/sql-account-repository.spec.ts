@@ -1,10 +1,10 @@
 import { faker } from "@faker-js/faker";
-import { SqlAccountRepository } from "../../src/infrastructure/repository/account-repository";
-import { AccountBuilder } from "../builders/account-builder";
+import { SqlAccountRepository } from "../../../src/infrastructure/repository/account-repository";
+import { AccountBuilder } from "../../builders/account-builder";
 import {
   DatabaseConnection,
   PgPromiseAdapter,
-} from "../../src/infrastructure/database/database-connection";
+} from "../../../src/infrastructure/database/database-connection";
 
 describe("SqlAccountRepository (integration)", () => {
   let databaseConnection: DatabaseConnection;

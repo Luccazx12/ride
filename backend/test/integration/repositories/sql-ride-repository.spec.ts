@@ -1,11 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { SqlRideRepository } from "../../src/infrastructure/repository/ride-repository";
-import { RideBuilder } from "../builders/ride-builder";
+import { SqlRideRepository } from "../../../src/infrastructure/repository/ride-repository";
+import { RideBuilder } from "../../builders/ride-builder";
 import {
   DatabaseConnection,
   PgPromiseAdapter,
-} from "../../src/infrastructure/database/database-connection";
-import { RideStatus } from "../../src/domain/entity/ride";
+} from "../../../src/infrastructure/database/database-connection";
+import { RideStatus } from "../../../src/domain/entity/ride";
 
 describe("SqlRideRepository (integration)", () => {
   let databaseConnection: DatabaseConnection;
