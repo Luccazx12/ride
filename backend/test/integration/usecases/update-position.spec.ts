@@ -1,20 +1,20 @@
-import { AcceptRide } from "../../src/application/usecase/accept-ride";
-import { GetPositions } from "../../src/application/usecase/get-positions";
-import { RequestRide } from "../../src/application/usecase/request-ride";
-import { Signup } from "../../src/application/usecase/signup";
-import { StartRide } from "../../src/application/usecase/start-ride";
-import { UpdatePosition } from "../../src/application/usecase/update-position";
-import { RequestRideOutput } from "../../src/dtos/request-ride-output";
-import { SignupOutput } from "../../src/dtos/signup-output";
-import { NoopMailerGateway } from "../../src/infrastructure/gateway/mailer-gateway";
-import { PositionRepository } from "../../src/infrastructure/repository/position-repository";
-import { AcceptRideInputBuilder } from "../builders/accept-ride-input-builder";
-import { RequestRideInputBuilder } from "../builders/request-ride-input-builder";
-import { SignUpInputBuilder } from "../builders/signup-input-builder";
-import { UpdatePositionInputBuilder } from "../builders/update-position-input-builder";
-import { InMemoryAccountRepository } from "../doubles/in-memory-account-repository";
-import { InMemoryPositionRepository } from "../doubles/in-memory-position-repository";
-import { InMemoryRideRepository } from "../doubles/in-memory-ride-repository";
+import { AcceptRide } from "../../../src/application/usecase/accept-ride";
+import { GetPositions } from "../../../src/application/usecase/get-positions";
+import { RequestRide } from "../../../src/application/usecase/request-ride";
+import { Signup } from "../../../src/application/usecase/signup";
+import { StartRide } from "../../../src/application/usecase/start-ride";
+import { UpdatePosition } from "../../../src/application/usecase/update-position";
+import { RequestRideOutput } from "../../../src/dtos/request-ride-output";
+import { SignupOutput } from "../../../src/dtos/signup-output";
+import { NoopMailerGateway } from "../../../src/infrastructure/gateway/mailer-gateway";
+import { PositionRepository } from "../../../src/infrastructure/repository/position-repository";
+import { AcceptRideInputBuilder } from "../../builders/accept-ride-input-builder";
+import { RequestRideInputBuilder } from "../../builders/request-ride-input-builder";
+import { SignUpInputBuilder } from "../../builders/signup-input-builder";
+import { UpdatePositionInputBuilder } from "../../builders/update-position-input-builder";
+import { InMemoryAccountRepository } from "../../doubles/in-memory-account-repository";
+import { InMemoryPositionRepository } from "../../doubles/in-memory-position-repository";
+import { InMemoryRideRepository } from "../../doubles/in-memory-ride-repository";
 
 type Subject = {
   requestRide: RequestRide;
