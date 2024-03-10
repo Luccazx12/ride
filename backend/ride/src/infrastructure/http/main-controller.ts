@@ -23,7 +23,6 @@ export class MainController {
       HttpMethod.get,
       "/v1/ride/:id",
       async (req: HttpRequest) => {
-        console.log(req);
         const ride = await this.getRide.execute(req.params.id);
         if (!ride) return { status: 404 };
         return { status: 200, data: ride };

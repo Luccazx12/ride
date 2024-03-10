@@ -84,8 +84,10 @@ export class Ride {
   }
 
   public updatePosition(lat: number, long: number): void {
-    if (!this.isStarted())
+    if (!this.isStarted()) {
       this.addError(new Error("Ride need to be started to update position"));
+      return;
+    }
     const newPosition = { lat, long };
     this.properties.distance += DistanceCalculator.calculateDistance(
       this.properties.lastPosition,
@@ -95,16 +97,20 @@ export class Ride {
   }
 
   public start(): void {
-    if (!this.isAccepted())
+    if (!this.isAccepted()) {
       this.addError(new Error("Ride needs to be accepted to start"));
+      return;
+    }
     this.properties.startedAt = new Date();
   }
 
   public accept(driverId: string): void {
-    if (!this.isRequested())
+    if (!this.isRequested()) {
       this.addError(
         new Error("Ride need to be in requested status to be accepted")
       );
+      return;
+    }
     this.properties.driverId = driverId;
     this.properties.acceptedAt = new Date();
   }

@@ -8,6 +8,8 @@ export class StartRide {
 
     if (!ride) return [new Error("Ride not found")];
     ride.start();
+    const rideErrors = ride.getErrors();
+    if (rideErrors.length > 0) return rideErrors;
     await this.rideRepository.update(ride);
   }
 }

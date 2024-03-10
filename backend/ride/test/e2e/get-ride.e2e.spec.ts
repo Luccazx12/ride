@@ -24,7 +24,7 @@ describe("GetRide (e2e)", () => {
       "http://localhost:3000/v1/request_ride",
       requestRideInput
     );
-    console.log(requestRideResponse)
+
     const requestRideOutput = requestRideResponse.data;
 
     // when

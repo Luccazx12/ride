@@ -15,7 +15,9 @@ create table ride.ride (
 	to_long numeric,
 	requested_at timestamp,
 	accepted_at timestamp,
-	started_at timestamp
+	started_at timestamp,
+	last_position_lat numeric,
+	last_position_long numeric
 );
 
 create table ride.position (

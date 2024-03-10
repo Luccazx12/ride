@@ -46,7 +46,7 @@ export class SqlRideRepository implements RideRepository {
   public async save(ride: Ride): Promise<void> {
     const rideProperties = ride.getProperties();
     await this.connection.query(
-      "INSERT INTO ride.ride (ride_id, passenger_id, driver_id, status, fare, distance, from_lat, from_long, to_lat, to_long, requested_at, accepted_at, started_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)",
+      "INSERT INTO ride.ride (ride_id, passenger_id, driver_id, status, fare, distance, from_lat, from_long, to_lat, to_long, requested_at, accepted_at, started_at, last_position_lat, last_position_long) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)",
       [
         rideProperties.rideId,
         rideProperties.passengerId,
@@ -61,6 +61,8 @@ export class SqlRideRepository implements RideRepository {
         rideProperties.requestedAt,
         rideProperties.acceptedAt,
         rideProperties.startedAt,
+        rideProperties.lastPosition.lat,
+        rideProperties.lastPosition.long,
       ]
     );
   }
@@ -68,7 +70,7 @@ export class SqlRideRepository implements RideRepository {
   public async update(ride: Ride): Promise<void> {
     const rideProperties = ride.getProperties();
     await this.connection.query(
-      "UPDATE ride.ride SET passenger_id = $2, driver_id = $3, status = $4, fare = $5, distance = $6, from_lat = $7, from_long = $8, to_lat = $9, to_long = $10, requested_at = $11, accepted_at = $12, started_at = $13 WHERE ride_id = $1;",
+      "UPDATE ride.ride SET passenger_id = $2, driver_id = $3, status = $4, fare = $5, distance = $6, from_lat = $7, from_long = $8, to_lat = $9, to_long = $10, requested_at = $11, accepted_at = $12, started_at = $13, last_position_lat = $14, last_position_long = $15 WHERE ride_id = $1;",
       [
         rideProperties.rideId,
         rideProperties.passengerId,
@@ -83,12 +85,14 @@ export class SqlRideRepository implements RideRepository {
         rideProperties.requestedAt,
         rideProperties.acceptedAt,
         rideProperties.startedAt,
+        rideProperties.lastPosition.lat,
+        rideProperties.lastPosition.long,
       ]
     );
   }
 
   private mapToRide(databaseRide: any): Ride {
-    const data: Partial<RideProperties> = {
+    const data: RideProperties = {
       rideId: databaseRide.ride_id,
       passengerId: databaseRide.passenger_id,
       fare: Number(databaseRide.fare),
@@ -101,14 +105,17 @@ export class SqlRideRepository implements RideRepository {
         lat: Number(databaseRide.to_lat),
       },
       requestedAt: new Date(databaseRide.requested_at),
+      distance: Number(databaseRide.distance),
+      lastPosition: {
+        lat: Number(databaseRide.last_position_lat),
+        long: Number(databaseRide.last_position_long),
+      },
     };
-
     if (databaseRide.accepted_at)
       data.acceptedAt = new Date(databaseRide.accepted_at);
     if (databaseRide.started_at)
       data.startedAt = new Date(databaseRide.started_at);
     if (databaseRide.driver_id) data.driverId = databaseRide.driver_id;
-
-    return Ride.restore(data as RideProperties);
+    return Ride.restore(data);
   }
 }
