@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "cpf-cnpj-validator": "^1.0.3"
-  },
-  "devDependencies": {
-    "@faker-js/faker": "^8.4.1"
-  }
-}
