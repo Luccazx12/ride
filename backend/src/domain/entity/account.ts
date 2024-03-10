@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import { isValidCpf } from "../cpf-validation";
 
+export class AggregateRoot {}
+
 export type AccountProperties = {
   accountId: string;
   name: string;
@@ -11,10 +13,11 @@ export type AccountProperties = {
   isDriver: boolean;
 };
 
-export class Account {
+export class Account extends AggregateRoot {
   private validationErrors: Error[] = [];
 
   private constructor(private readonly properties: AccountProperties) {
+    super();
     this.validate();
   }
 
@@ -27,6 +30,14 @@ export class Account {
 
   public static restore(properties: AccountProperties): Account {
     return new Account(properties);
+  }
+
+  public get carPlate(): string {
+    return this.properties.carPlate;
+  }
+
+  public get cpf(): string {
+    return this.properties.cpf;
   }
 
   public get accountId(): string {
