@@ -20,5 +20,6 @@ export class UpdatePosition {
     const errors = [...position.getErrors(), ...ride.getErrors()];
     if (errors.length > 0) return errors;
     await this.positionRepository.save(position);
+    await this.rideRepository.update(ride);
   }
 }

@@ -16,7 +16,6 @@ export class RequestRide {
     const passengerAccount = await this.accountGateway.getById(
       input.passengerId
     );
-    console.log(passengerAccount);
     if (!passengerAccount) return [new Error("Passenger not found")];
     if (!passengerAccount.isPassenger)
       return [new Error("Account is not a passenger")];

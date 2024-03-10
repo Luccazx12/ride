@@ -50,7 +50,7 @@ export class Ride {
   }
 
   public get distance(): number {
-    return 0;
+    return this.properties.distance;
   }
 
   public get passengerId(): string {

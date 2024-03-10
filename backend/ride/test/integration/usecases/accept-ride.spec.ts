@@ -3,7 +3,6 @@ import { RequestRide } from "../../../src/application/usecase/request-ride";
 import { RequestRideOutput } from "../../../src/dtos/request-ride-output";
 import { GetRideOutput } from "../../../src/dtos/ride";
 import { SignupOutput } from "../../../src/dtos/signup-output";
-import { NoopMailerGateway } from "../../../src/infrastructure/gateway/mailer-gateway";
 import { RideRepository } from "../../../src/infrastructure/repository/ride-repository";
 import { RequestRideInputBuilder } from "../../builders/request-ride-input-builder";
 import { SignUpInputBuilder } from "../../builders/signup-input-builder";
