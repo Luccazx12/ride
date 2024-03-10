@@ -1,4 +1,4 @@
-import { AccountRepository } from "../../infrastructure/repository/account-repository";
+import { AccountRepository } from "../../application/repository/account-repository";
 import { GetAccountOutput } from "../../dtos/get-account-output";
 
 export class GetAccount {

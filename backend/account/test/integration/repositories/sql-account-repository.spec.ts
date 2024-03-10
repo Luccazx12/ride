@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { SqlAccountRepository } from "../../../src/infrastructure/repository/account-repository";
+import { SqlAccountRepository } from "../../../src/infrastructure/repository/sql-account-repository";
 import { AccountBuilder } from "../../builders/account-builder";
 import {
   DatabaseConnection,
   PgPromiseAdapter,
 } from "../../../src/infrastructure/database/database-connection";
+import { SqlORM } from "../../../src/infrastructure/orm/sql-orm";
 
 describe("SqlAccountRepository (integration)", () => {
   let databaseConnection: DatabaseConnection;
@@ -18,7 +19,7 @@ describe("SqlAccountRepository (integration)", () => {
   describe("save", () => {
     it("should create account", async () => {
       // given
-      const dao = new SqlAccountRepository(databaseConnection);
+      const dao = new SqlAccountRepository(new SqlORM(databaseConnection));
       const account = new AccountBuilder().build();
 
       // when
@@ -33,7 +34,7 @@ describe("SqlAccountRepository (integration)", () => {
   describe("getById", () => {
     it("should get account by id", async () => {
       // given
-      const dao = new SqlAccountRepository(databaseConnection);
+      const dao = new SqlAccountRepository(new SqlORM(databaseConnection));
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -48,7 +49,7 @@ describe("SqlAccountRepository (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountRepository(databaseConnection);
+      const dao = new SqlAccountRepository(new SqlORM(databaseConnection));
 
       // when
       const foundAccount = await dao.getById(faker.string.uuid());
@@ -61,7 +62,7 @@ describe("SqlAccountRepository (integration)", () => {
   describe("getByEmail", () => {
     it("should get account by email", async () => {
       // given
-      const dao = new SqlAccountRepository(databaseConnection);
+      const dao = new SqlAccountRepository(new SqlORM(databaseConnection));
       const account = new AccountBuilder().build();
 
       await dao.save(account);
@@ -76,7 +77,7 @@ describe("SqlAccountRepository (integration)", () => {
 
     it("should return null when account is not found by id", async () => {
       // given
-      const dao = new SqlAccountRepository(databaseConnection);
+      const dao = new SqlAccountRepository(new SqlORM(databaseConnection));
 
       // when
       const foundAccount = await dao.getByEmail(faker.internet.email());

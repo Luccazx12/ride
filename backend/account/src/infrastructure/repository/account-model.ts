@@ -1,5 +1,5 @@
 import { Account } from "../../domain/entity/account";
-import { ColumnDecorator, Model, ModelDecorator } from "./orm";
+import { ModelDecorator, Model, ColumnDecorator } from "../orm/model";
 
 @ModelDecorator("ride", "account")
 export class AccountModel extends Model<Account> {
@@ -47,9 +47,9 @@ export class AccountModel extends Model<Account> {
     return new AccountModel(
       account.accountId,
       account.name,
+      account.email,
       account.cpf,
       account.carPlate,
-      account.email,
       account.isPassenger,
       account.isDriver
     );
