@@ -12,17 +12,15 @@ import {
   GetRideDIToken,
 } from "./infrastructure/dependency-injection/di-tokens";
 import { HttpAccountGateway } from "./infrastructure/gateway/http-account-gateway";
+import { AxiosAdapter } from "./infrastructure/http/http-client/http-client";
 
 const container = Container.getInstance(new InMemoryContainerStorage());
 const connection = new PgPromiseAdapter();
-const getRide = new GetRide(
-  new SqlRideRepository(connection),
-  new HttpAccountGateway()
-);
-const requestRide = new RequestRide(
-  new HttpAccountGateway(),
-  new SqlRideRepository(connection)
-);
+const accountHttpClient = new AxiosAdapter("http://localhost:3001");
+const httpAccountGateway = new HttpAccountGateway(accountHttpClient);
+const sqlRideRepository = new SqlRideRepository(connection);
+const getRide = new GetRide(sqlRideRepository, httpAccountGateway);
+const requestRide = new RequestRide(httpAccountGateway, sqlRideRepository);
 const httpServer = new ExpressAdapter();
 container.register(HttpServerDIToken, httpServer);
 container.register(GetRideDIToken, getRide);
