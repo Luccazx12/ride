@@ -12,15 +12,13 @@ export class UpdatePosition {
   public async execute(input: UpdatePositionInput): Promise<void | Error[]> {
     const ride = await this.rideRepository.getById(input.rideId);
     if (!ride) return [new Error("Ride not found")];
-    if (!ride.isStarted())
-      return [new Error("Ride need to be started to update position")];
+    ride.updatePosition(input.position.lat, input.position.long);
     const position = Position.create({
       coordinates: input.position,
       rideId: input.rideId,
     });
-
-    const positionErrors = position.getErrors();
-    if (positionErrors.length > 0) return positionErrors;
+    const errors = [...position.getErrors(), ...ride.getErrors()];
+    if (errors.length > 0) return errors;
     await this.positionRepository.save(position);
   }
 }

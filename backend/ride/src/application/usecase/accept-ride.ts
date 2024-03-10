@@ -21,8 +21,6 @@ export class AcceptRide {
       return [new Error("Driver already has an ride accepted or in progress")];
     const ride = await this.rideRepository.getById(input.rideId);
     if (!ride) return [new Error("Ride not found")];
-    if (!ride.isRequested())
-      return [new Error("Ride need to be in requested status to be accepted")];
     ride.accept(input.driverId);
     const rideErrors = ride.getErrors();
     if (rideErrors.length > 0) return rideErrors;

@@ -7,8 +7,6 @@ export class StartRide {
     const ride = await this.rideRepository.getById(rideId);
 
     if (!ride) return [new Error("Ride not found")];
-    if (!ride.isAccepted())
-      return [new Error("Ride needs to be accepted to start")];
     ride.start();
     await this.rideRepository.update(ride);
   }
