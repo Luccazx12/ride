@@ -1,12 +1,12 @@
 import { AggregateRoot } from "../../domain/entity/account";
 import { DatabaseConnection } from "../database/database-connection";
 
-type FieldType<Model> = Exclude<
+export type FieldType<Model> = Exclude<
   keyof Model,
   "schema" | "table" | "columns" | "toAggregate"
 >;
 
-interface ORM<M extends Model<any>> {
+export interface ORM<M extends Model<any>> {
   save(model: M): Promise<void>;
   // update(model: M): Promise<void>;
   // delete(model: M): Promise<void>;
@@ -36,7 +36,8 @@ export class SqlORM<M extends Model<any>> implements ORM<M> {
     const prototypeFields = model.prototype.columns.find(
       (f: { property: string; column: string }) => f.property === field
     );
-    const query = `SELECT * from ${model.prototype.schema}.${model.prototype.table} WHERE ${prototypeFields?.column} = $1`;
+    if (!prototypeFields) return null;
+    const query = `SELECT * from ${model.prototype.schema}.${model.prototype.table} WHERE ${prototypeFields.column} = $1`;
     const [data] = await this.databaseConnection.query(query, value);
     if (!data) return null;
     const modelObject = new model();

@@ -47,9 +47,9 @@ export class AccountModel extends Model<Account> {
     return new AccountModel(
       account.accountId,
       account.name,
+      account.email,
       account.cpf,
       account.carPlate,
-      account.email,
       account.isPassenger,
       account.isDriver
     );

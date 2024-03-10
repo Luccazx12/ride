@@ -4,10 +4,10 @@ import {
   PgPromiseAdapter,
 } from "../../../src/infrastructure/database/database-connection";
 import { AccountModel } from "../../../src/infrastructure/orm/account-model";
-import { SqlORM } from "../../../src/infrastructure/orm/orm";
+import { FieldType, SqlORM } from "../../../src/infrastructure/orm/orm";
 import { AccountBuilder } from "../../builders/account-builder";
 
-describe("ORM (integration)", () => {
+describe("SqlORM (integration)", () => {
   let databaseConnection: DatabaseConnection;
 
   beforeAll(() => {
@@ -63,6 +63,22 @@ describe("ORM (integration)", () => {
     const persistedModel = await orm.findBy<AccountModel>(
       AccountModel,
       "accountId",
+      id
+    );
+
+    // then
+    expect(persistedModel).toEqual(null);
+  });
+
+  it("should return null when column is not mapped", async () => {
+    // given
+    const id = crypto.randomUUID();
+    const orm = new SqlORM(databaseConnection);
+
+    // when
+    const persistedModel = await orm.findBy<AccountModel>(
+      AccountModel,
+      "" as FieldType<AccountModel>,
       id
     );
 

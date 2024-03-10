@@ -1,5 +1,5 @@
 import { SignupOutput } from "../../dtos/signup-output";
-import { AccountRepository } from "../../infrastructure/repository/account-repository";
+import { AccountRepository } from "../../application/repository/account-repository";
 import { SignupInput } from "../../dtos/signup-input";
 import { MailerGateway } from "../../infrastructure/gateway/mailer-gateway";
 import { Account } from "../../domain/entity/account";
