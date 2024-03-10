@@ -29,6 +29,7 @@ export class GetRide {
       requestedAt: rideProperties.requestedAt,
       acceptedAt: rideProperties.acceptedAt,
       startedAt: rideProperties.startedAt,
+      lastPosition: rideProperties.lastPosition,
     };
   }
 }

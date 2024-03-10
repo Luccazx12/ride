@@ -15,7 +15,8 @@ export type GetRideOutput = {
   distance: number;
   from: Coordinates;
   to: Coordinates;
+  lastPosition: Coordinates;
   requestedAt: Date;
   acceptedAt?: Date;
   startedAt?: Date;
-}
+};
