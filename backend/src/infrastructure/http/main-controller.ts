@@ -3,15 +3,30 @@ import { GetRide } from "../../application/usecase/get-ride";
 import { HttpMethod, HttpRequest, HttpServer } from "./http-server";
 import { RequestRide } from "../../application/usecase/request-ride";
 import { Signup } from "../../application/usecase/signup";
+import { Inject } from "../dependency-injection/container";
+import {
+  GetAccountDIToken,
+  HttpServerDIToken,
+  SignupDIToken,
+  RequestRideDIToken,
+  GetRideDIToken,
+} from "../dependency-injection/di-tokens";
 
 export class MainController {
-  public constructor(
-    private readonly httpServer: HttpServer,
-    private readonly signup: Signup,
-    private readonly getAccount: GetAccount,
-    private readonly requestRide: RequestRide,
-    private readonly getRide: GetRide
-  ) {}
+  @Inject(HttpServerDIToken)
+  private httpServer!: HttpServer;
+
+  @Inject(SignupDIToken)
+  private signup!: Signup;
+
+  @Inject(GetAccountDIToken)
+  private getAccount!: GetAccount;
+
+  @Inject(RequestRideDIToken)
+  private requestRide!: RequestRide;
+
+  @Inject(GetRideDIToken)
+  private getRide!: GetRide;
 
   public registerHttpRoutes() {
     this.httpServer.register(
