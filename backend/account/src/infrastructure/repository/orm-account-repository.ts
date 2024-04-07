@@ -4,11 +4,11 @@ import { ORM } from "../orm/orm";
 import { ORMRepository } from "../orm/orm-repository";
 import { AccountModel } from "./account-model";
 
-export class SqlAccountRepository
+export class ORMAccountRepository
   extends ORMRepository<Account, AccountModel>
   implements AccountRepository
 {
-  public constructor(protected readonly orm: ORM<AccountModel>) {
+  public constructor(protected readonly orm: ORM) {
     super(orm, AccountModel);
   }
 

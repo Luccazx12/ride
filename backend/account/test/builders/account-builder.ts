@@ -18,6 +18,11 @@ export class AccountBuilder {
     isDriver: false,
   };
 
+  public withAccountId(accountId: string): this {
+    this.props.accountId = accountId;
+    return this;
+  }
+
   public build(): Account {
     return Account.restore(this.props);
   }
