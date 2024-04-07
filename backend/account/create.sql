@@ -1,6 +1,4 @@
-drop schema if exists ride cascade;
-
-create schema ride;
+create schema if not exists ride;
 
 create table ride.account (
 	account_id uuid primary key,
