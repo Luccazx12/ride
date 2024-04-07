@@ -2,7 +2,10 @@ import pgp from "pg-promise";
 import pg from "pg-promise/typescript/pg-subset";
 
 export interface DatabaseConnection {
-  query(statement: string, params: any): Promise<any>;
+  query<QueryResult = any>(
+    statement: string,
+    params: any
+  ): Promise<QueryResult>;
   close(): Promise<void>;
 }
 
